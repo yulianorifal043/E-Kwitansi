@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>e-Surat Pernyataan - Yudi Filter</title>
+    <title>Sistem Surat Profesional - Yudi Filter</title>
     <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -12,15 +12,12 @@
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .font-heading { font-family: 'Playfair Display', serif; }
         
-        /* Step Transition */
         .step-content { display: none; }
         .step-content.active { display: block; }
 
-        /* Mobile Paper Logic */
         .paper-container {
             width: 100%;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
             display: flex;
             justify-content: center;
         }
@@ -29,11 +26,10 @@
             min-width: 210mm;
             min-height: 297mm;
             background: white;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
             transform-origin: top center;
         }
 
-        /* Signature Pad */
         .sig-canvas {
             touch-action: none;
             background-color: #f8fafc;
@@ -46,45 +42,40 @@
             .no-print { display: none !important; }
             body { background: white; margin: 0; padding: 0; }
             #print-area { 
-                box-shadow: none !important; 
-                border: none !important; 
-                width: 100% !important; 
-                padding: 20mm !important;
-                margin: 0 !important;
-                transform: scale(1) !important;
-                min-height: auto;
+                box-shadow: none !important; border: none !important; 
+                width: 100% !important; padding: 20mm !important;
+                margin: 0 !important; transform: scale(1) !important;
             }
-            .paper-container { overflow: visible !important; display: block !important; }
         }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen pb-32">
 
-    <!-- Navigasi Stepper -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 no-print shadow-sm">
+    <!-- Stepper Header -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 no-print shadow-sm">
         <div class="max-w-4xl mx-auto px-4 py-3">
             <div class="flex items-center justify-between relative">
                 <div class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100 -translate-y-1/2 z-0"></div>
-                
+                <!-- 5 Steps -->
                 <div class="step-dot active z-10 flex flex-col items-center gap-1" data-step="1">
                     <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold ring-4 ring-white transition-all">1</div>
-                    <span class="text-[8px] font-bold text-blue-600 uppercase tracking-tighter">Kop</span>
+                    <span class="text-[8px] font-bold text-blue-600 uppercase">Kategori</span>
                 </div>
                 <div class="step-dot z-10 flex flex-col items-center gap-1" data-step="2">
                     <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white">2</div>
-                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Tujuan</span>
+                    <span class="text-[8px] font-bold text-slate-400 uppercase">Tujuan</span>
                 </div>
                 <div class="step-dot z-10 flex flex-col items-center gap-1" data-step="3">
                     <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white">3</div>
-                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Isi</span>
+                    <span class="text-[8px] font-bold text-slate-400 uppercase">Isi</span>
                 </div>
                 <div class="step-dot z-10 flex flex-col items-center gap-1" data-step="4">
                     <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white">4</div>
-                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">TTD</span>
+                    <span class="text-[8px] font-bold text-slate-400 uppercase">TTD</span>
                 </div>
                 <div class="step-dot z-10 flex flex-col items-center gap-1" data-step="5">
                     <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white">5</div>
-                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Hasil</span>
+                    <span class="text-[8px] font-bold text-slate-400 uppercase">Hasil</span>
                 </div>
             </div>
         </div>
@@ -92,103 +83,101 @@
 
     <main class="max-w-4xl mx-auto p-4 lg:p-8">
         
-        <!-- STEP 1: KOP SURAT -->
+        <!-- STEP 1: PILIH JENIS SURAT & KOP -->
         <section id="step-1" class="step-content active space-y-6">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h2 class="text-xl font-black mb-6 flex items-center gap-2 tracking-tighter uppercase text-blue-900">Identitas Bisnis</h2>
+                <h2 class="text-xl font-black mb-6 tracking-tight uppercase text-blue-900">Klasifikasi Surat</h2>
                 
-                <div class="mb-8 p-6 border-2 border-dashed border-blue-100 rounded-3xl bg-blue-50/30 flex flex-col items-center justify-center text-center">
-                    <div id="logo-preview-box" class="w-32 h-32 mb-4 bg-white rounded-2xl shadow-sm flex items-center justify-center overflow-hidden border border-blue-100">
-                        <!-- Default preview looks for logo.png -->
-                        <img src="logo.png" onerror="this.parentElement.innerHTML='<span class=\'text-[10px] font-bold text-blue-300\'>LOGO.PNG</span>'" class="max-w-full max-h-full object-contain p-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Kategori Selection -->
+                    <div class="md:col-span-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block tracking-widest">Jenis Surat & Template</label>
+                        <select id="in-category" onchange="generateDocNumber()" class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl text-sm font-bold outline-none focus:border-blue-500 transition-all cursor-pointer">
+                            <option value="SPN">Surat Pernyataan (SPN)</option>
+                            <option value="SPJ">Surat Perjanjian Kerjasama (SPJ)</option>
+                            <option value="SPH">Surat Penawaran Harga (SPH)</option>
+                            <option value="SKT">Surat Keterangan Teknis (SKT)</option>
+                        </select>
                     </div>
-                    <label for="logo-upload" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold cursor-pointer hover:bg-blue-700 transition shadow-lg shadow-blue-100">
-                        Upload Logo Baru (Opsional)
-                    </label>
-                    <input type="file" id="logo-upload" class="hidden" accept="image/*" onchange="handleLogoUpload(this)">
-                    <p class="text-[10px] text-slate-400 mt-2 italic">Format: PNG/JPG. File default: logo.png</p>
-                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Nama Lengkap Bisnis</label>
-                        <input type="text" id="in-company" value="YUDI FILTER – AHLI AIR DOMESTIK" class="w-full border p-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="md:col-span-2 border-t pt-6 mt-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block tracking-widest">Nomor Surat (Dapat Diedit)</label>
+                        <div class="relative">
+                            <input type="text" id="in-doc-num" class="w-full bg-blue-50 border-2 border-blue-100 p-4 rounded-2xl text-sm font-mono font-bold text-blue-700 outline-none focus:border-blue-500 focus:bg-white transition-all" placeholder="Masukkan nomor surat...">
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-blue-400 uppercase pointer-events-none">Editable</div>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-2 italic">*Nomor di atas adalah saran otomatis, silakan ubah jika diperlukan.</p>
                     </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Slogan / Tagline</label>
-                        <input type="text" id="in-slogan" value="Cekatan, Tepat, Mengalir Sempurna" class="w-full border p-4 rounded-2xl text-sm outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">WhatsApp Bisnis</label>
-                        <input type="text" id="in-phone" value="+62 898-8147-186" class="w-full border p-4 rounded-2xl text-sm outline-none">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Alamat Kantor</label>
-                        <textarea id="in-address" class="w-full border p-4 rounded-2xl text-sm outline-none" rows="2">Jl. Raya Pati-kayen Km 12 Ds Sundoluhur Kec Kayen, Pati.</textarea>
+
+                    <div class="md:col-span-2 border-t pt-6">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Logo Default (logo.png)</label>
+                        <div id="logo-preview-box" class="w-24 h-24 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden border">
+                            <img src="logo.png" onerror="this.parentElement.innerHTML='<span class=\'text-[10px] font-bold text-slate-300\'>NO LOGO</span>'" class="max-w-full max-h-full object-contain p-2">
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- STEP 2: TUJUAN SURAT -->
+        <!-- STEP 2: PENERIMA -->
         <section id="step-2" class="step-content space-y-6">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h2 class="text-xl font-black mb-6 tracking-tighter uppercase text-blue-900">Penerima Surat</h2>
+                <h2 class="text-xl font-black mb-6 tracking-tight uppercase text-blue-900">Tujuan Surat</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-[10px] font-bold text-slate-400 uppercase">Ditujukan Kepada</label>
-                        <input type="text" id="in-recipient" value="Muh Iqbal Faisal" class="w-full border p-4 rounded-2xl text-sm font-bold outline-none">
+                        <input type="text" id="in-recipient" value="Muh Iqbal Faisal" class="w-full border p-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500 transition">
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Alamat/Tempat</label>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Jabatan/Perusahaan Penerima</label>
+                        <input type="text" id="in-recipient-title" value="Pimpinan Proyek MBG" class="w-full border p-4 rounded-2xl text-sm outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Alamat Penerima</label>
                         <input type="text" id="in-location" value="Di Tempat" class="w-full border p-4 rounded-2xl text-sm outline-none">
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Perihal Surat</label>
-                        <input type="text" id="in-subject" value="Permohonan Penyesuaian Harga (Addendum) Akibat Fluktuasi Pasar" class="w-full border p-4 rounded-2xl text-sm font-bold outline-none">
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- STEP 3: ISI KONTEN -->
+        <!-- STEP 3: KONTEN DINAMIS -->
         <section id="step-3" class="step-content space-y-6">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h2 class="text-xl font-black mb-6 tracking-tighter uppercase text-blue-900">Isi Pernyataan</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <h2 class="text-xl font-black mb-6 tracking-tight uppercase text-blue-900">Edit Konten</h2>
+                <div class="space-y-4">
                     <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Nomor Surat Resmi</label>
-                        <input type="text" id="in-doc-num" value="006/YF-ADD/IV/2026" class="w-full border p-4 rounded-2xl text-sm outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Keterangan Lampiran</label>
-                        <input type="text" id="in-attachment" value="1 (Satu) Berkas Rincian" class="w-full border p-4 rounded-2xl text-sm outline-none">
-                    </div>
-                    <div class="md:col-span-2">
                         <label class="text-[10px] font-bold text-slate-400 uppercase">Paragraf Pembuka</label>
-                        <textarea id="in-body-1" class="w-full border p-4 rounded-2xl text-sm outline-none leading-relaxed" rows="3">Terlebih dahulu kami mengucapkan terima kasih atas kepercayaan Bapak/Ibu kepada Yudi Filter dalam pengadaan sistem IPAL Domestik. Kami berkomitmen penuh untuk selalu memberikan kualitas material dan hasil kerja terbaik demi kepuasan Bapak/Ibu.</textarea>
+                        <textarea id="in-body-1" class="w-full border p-4 rounded-2xl text-sm outline-none leading-relaxed" rows="4"></textarea>
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Inti Masalah (Alasan Fluktuasi)</label>
-                        <textarea id="in-body-2" class="w-full border p-4 rounded-2xl text-sm outline-none leading-relaxed" rows="5">Melalui surat ini, kami bermaksud menyampaikan kondisi terkini terkait dinamika harga material di pasar. Sehubungan dengan adanya kenaikan biaya bahan baku secara global (termasuk kenaikan harga material dasar dan fluktuasi pasar yang cukup signifikan), maka terjadi penyesuaian harga dari pihak produsen/supplier utama kami (PT Graha Pilar Sentosa - BIOGAR).</textarea>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Inti Pernyataan / Rincian</label>
+                        <textarea id="in-body-2" class="w-full border p-4 rounded-2xl text-sm outline-none leading-relaxed" rows="6"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Lampiran (Opsional)</label>
+                        <input type="text" id="in-attachment" value="1 (Satu) Berkas Terlampir" class="w-full border p-4 rounded-2xl text-sm outline-none">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- STEP 4: TANDA TANGAN -->
+        <!-- STEP 4: LEGALITAS -->
         <section id="step-4" class="step-content space-y-6">
-            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm max-w-lg mx-auto">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm max-w-lg mx-auto text-center">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-black text-lg tracking-tighter uppercase text-blue-900">Legalitas Digital</h3>
-                    <button onclick="clearSig()" class="text-xs font-bold text-red-500 hover:bg-red-50 px-3 py-1.5 rounded-xl transition">Hapus Goresan</button>
+                    <h3 class="font-black text-lg tracking-tighter uppercase text-blue-900 text-left">Otorisasi Digital</h3>
+                    <button onclick="clearSig()" class="text-xs font-bold text-red-500 hover:bg-red-50 px-3 py-1.5 rounded-xl transition">Hapus</button>
                 </div>
                 <canvas id="canvas-sig" class="sig-canvas w-full h-64"></canvas>
-                <div class="mt-4">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">Nama Lengkap Penandatangan</label>
-                    <input type="text" id="in-signer-name" value="Yudi" class="w-full border p-3 rounded-xl text-sm font-bold outline-none mb-3">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">Jabatan</label>
-                    <input type="text" id="in-signer-title" value="Owner Yudi Filter" class="w-full border p-3 rounded-xl text-xs outline-none">
+                <div class="mt-6 text-left space-y-3">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Nama Penandatangan</label>
+                        <input type="text" id="in-signer-name" value="YUDI" class="w-full border p-4 rounded-2xl text-sm font-bold outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Jabatan</label>
+                        <input type="text" id="in-signer-title" value="Owner Yudi Filter" class="w-full border p-4 rounded-2xl text-sm outline-none">
+                    </div>
                 </div>
             </div>
         </section>
@@ -196,62 +185,57 @@
         <!-- STEP 5: PREVIEW -->
         <section id="step-5" class="step-content space-y-6 no-print">
             <div class="paper-container">
-                <!-- PRINT AREA -->
                 <div id="print-area" class="p-16 flex flex-col text-black leading-[1.6]">
                     
-                    <!-- Kop Surat -->
-                    <div class="flex items-center border-b-[6px] border-blue-600 pb-8 mb-10">
-                        <div id="out-logo-container" class="mr-8 flex items-center justify-center">
-                            <!-- Logo will be injected here -->
-                            <img src="logo.png" style="max-height: 80px;" onerror="this.style.display='none'" class="object-contain">
+                    <!-- KOP SURAT FORMAL -->
+                    <div class="flex items-center border-b-[5px] border-blue-600 pb-6 mb-10">
+                        <div class="mr-8 flex items-center justify-center">
+                            <img src="logo.png" style="max-height: 85px;" onerror="this.style.display='none'" class="object-contain">
                         </div>
-                        <div class="flex-1 text-center">
-                            <h1 id="out-company" class="text-2xl font-black tracking-tighter font-heading text-blue-900 uppercase leading-none"></h1>
-                            <p id="out-slogan" class="text-sm font-bold italic text-blue-600 mt-1 tracking-tight"></p>
-                            <div class="text-[10px] mt-4 flex justify-center gap-5 text-slate-500 font-semibold">
-                                <span id="out-address" class="max-w-[320px]"></span>
-                                <span class="text-blue-800">WA: <span id="out-phone"></span></span>
+                        <div class="flex-1 text-center pr-12">
+                            <h1 class="text-2xl font-black tracking-tighter font-heading text-blue-900 uppercase leading-none">YUDI FILTER – AHLI AIR DOMESTIK</h1>
+                            <p class="text-sm font-bold italic text-blue-600 mt-1 tracking-tight">Cekatan, Tepat, Mengalir Sempurna</p>
+                            <div class="text-[10px] mt-4 flex justify-center gap-5 text-slate-500 font-semibold uppercase tracking-wider">
+                                <span>Jl. Raya Pati-kayen Km 12 Ds Sundoluhur, Pati.</span>
+                                <span class="text-blue-800">| WA: +62 898-8147-186</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Header Dokumen -->
-                    <div class="flex justify-between text-sm mb-12">
-                        <div class="space-y-1">
-                            <p>Nomor: <span id="out-doc-num" class="font-bold"></span></p>
-                            <p>Perihal: <span id="out-subject" class="font-bold border-b border-black/20"></span></p>
-                            <p>Lampiran: <span id="out-attachment"></span></p>
+                    <!-- DATA SURAT -->
+                    <div class="flex justify-between text-[13px] mb-12">
+                        <div class="space-y-1.5">
+                            <p>Nomor<span class="inline-block w-16 ml-2 text-right mr-2">:</span><span id="out-doc-num" class="font-bold"></span></p>
+                            <p>Lampiran<span class="inline-block w-16 ml-2 text-right mr-2">:</span><span id="out-attachment"></span></p>
+                            <p>Perihal<span class="inline-block w-16 ml-2 text-right mr-2">:</span><span id="out-subject" class="font-bold border-b border-black/20"></span></p>
                         </div>
                         <div class="text-right">
-                            <p id="out-date" class="font-bold text-blue-900 tracking-widest text-xs uppercase"></p>
+                            <p id="out-date" class="font-bold text-blue-900 tracking-widest text-[11px] uppercase"></p>
                         </div>
                     </div>
 
-                    <!-- Kepada -->
-                    <div class="text-sm mb-10">
-                        <p class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-widest">Kepada Yth,</p>
-                        <p id="out-recipient" class="font-bold text-lg uppercase text-blue-900 leading-none"></p>
-                        <p id="out-location" class="italic text-slate-500 mt-1"></p>
+                    <!-- TUJUAN -->
+                    <div class="text-[14px] mb-10">
+                        <p class="mb-1">Kepada Yth,</p>
+                        <p id="out-recipient" class="font-black text-lg uppercase text-blue-900"></p>
+                        <p id="out-recipient-title" class="font-medium opacity-80"></p>
+                        <p id="out-location" class="italic text-slate-500"></p>
                     </div>
 
-                    <!-- Konten Surat -->
+                    <!-- BODY -->
                     <div class="text-[15px] space-y-6 text-justify">
                         <p>Dengan hormat,</p>
                         <p id="out-body-1"></p>
-                        <p id="out-body-2"></p>
-                        <p>Kondisi fluktuatif ini berdampak pada nilai pengadaan unit dan komponen teknis yang telah kami ajukan sebelumnya. Oleh karena itu, demi menjaga standar kualitas material agar tetap sesuai dengan spesifikasi yang telah disepakati (Industry-Standard), kami mengajukan permohonan Addendum (Penyesuaian Harga) pada beberapa poin komponen penawaran.</p>
-                        <p>Kami berharap Bapak/Ibu dapat memaklumi kondisi eksternal pasar ini. Kami menjamin bahwa penyesuaian ini semata-mata dilakukan agar sistem IPAL yang kami bangun tetap memiliki ketahanan jangka panjang dan performa maksimal.</p>
-                        <p>Bersama surat ini, kami lampirkan rincian penyesuaian harga terbaru sebagai bahan pertimbangan Bapak/Ibu.</p>
-                        <p>Demikian permohonan ini kami sampaikan. Atas perhatian, pengertian, dan kerjasama baiknya, kami ucapkan terima kasih.</p>
+                        <div id="out-body-2" class="whitespace-pre-line"></div>
+                        <p>Demikian surat ini kami sampaikan agar dapat dipergunakan sebagaimana mestinya. Atas perhatian dan kerjasama baiknya, kami ucapkan terima kasih.</p>
                     </div>
 
-                    <!-- Tanda Tangan -->
+                    <!-- TANDA TANGAN -->
                     <div class="mt-20 ml-auto w-64 text-center">
-                        <p class="text-sm mb-4 font-bold opacity-50 uppercase tracking-widest">Hormat kami,</p>
+                        <p class="text-sm mb-4 font-bold opacity-40 uppercase tracking-widest">Hormat kami,</p>
                         <div class="h-32 flex items-center justify-center relative">
                             <img id="out-sig-img" class="max-h-full max-w-full object-contain z-10 hidden" src="" alt="TTD">
-                            <!-- Stempel Dekoratif -->
-                            <div class="absolute w-28 h-28 border-4 border-blue-600/10 rounded-full flex items-center justify-center text-blue-600/10 font-black text-[10px] rotate-[-12deg] pointer-events-none uppercase">
+                            <div class="absolute w-28 h-28 border-4 border-blue-600/10 rounded-full flex items-center justify-center text-blue-600/10 font-black text-[9px] rotate-[-12deg] pointer-events-none uppercase">
                                 YUDI FILTER<br>OFFICIAL STAMP
                             </div>
                         </div>
@@ -262,20 +246,20 @@
                 </div>
             </div>
 
-            <!-- Tombol Aksi -->
+            <!-- ACTIONS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-12">
                 <button onclick="window.print()" class="bg-slate-900 text-white py-5 rounded-2xl font-black shadow-xl hover:bg-black transition flex items-center justify-center gap-3 active:scale-95">
-                    🖨️ CETAK PDF
+                    🖨️ CETAK DOKUMEN (PDF)
                 </button>
                 <button onclick="downloadImage()" class="bg-blue-600 text-white py-5 rounded-2xl font-black shadow-xl hover:bg-blue-700 transition flex items-center justify-center gap-3 active:scale-95">
-                    🖼️ SIMPAN JPG
+                    🖼️ SIMPAN SEBAGAI JPG
                 </button>
             </div>
         </section>
 
     </main>
 
-    <!-- Bar Navigasi Bawah -->
+    <!-- NAVIGATION BAR -->
     <div class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-200 p-4 no-print z-[60]">
         <div class="max-w-4xl mx-auto flex justify-between gap-4">
             <button id="prevBtn" onclick="changeStep(-1)" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-black disabled:hidden transition active:scale-95">KEMBALI</button>
@@ -286,17 +270,47 @@
     <script>
         let currentStep = 1;
         let sigCanvas, sigCtx;
-        let uploadedLogoUrl = null;
 
-        function handleLogoUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedLogoUrl = e.target.result;
-                    const previewBox = document.getElementById('logo-preview-box');
-                    previewBox.innerHTML = `<img src="${uploadedLogoUrl}" class="max-w-full max-h-full object-contain p-2">`;
-                };
-                reader.readAsDataURL(input.files[0]);
+        // Dummy Templates Database
+        const templates = {
+            SPN: {
+                subject: "Surat Pernyataan Penyesuaian Harga (Addendum)",
+                body1: "Terlebih dahulu kami mengucapkan terima kasih atas kepercayaan Bapak/Ibu kepada Yudi Filter. Melalui surat ini, kami bermaksud menyampaikan kondisi terkini terkait dinamika pasar.",
+                body2: "Sehubungan dengan adanya kenaikan biaya bahan baku secara global (material dasar & fluktuasi pasar), maka terjadi penyesuaian harga dari pihak supplier utama kami (PT Graha Pilar Sentosa).\n\nKondisi fluktuatif ini berdampak pada nilai pengadaan unit IPAL yang telah kami ajukan sebelumnya. Kami mengajukan permohonan addendum agar kualitas material tetap sesuai standar industri."
+            },
+            SPJ: {
+                subject: "Surat Perjanjian Kerjasama Pemasangan Unit",
+                body1: "Surat Perjanjian ini dibuat dan disepakati oleh kedua belah pihak terkait pengadaan dan instalasi unit penjernihan air (Filter) Domestik.",
+                body2: "Pihak Pertama berkomitmen untuk menyediakan unit dengan spesifikasi teknis terbaik, sementara Pihak Kedua berkomitmen untuk melakukan pembayaran sesuai termin yang telah disepakati.\n\nPekerjaan akan dimulai sejak penandatanganan surat ini dengan jangka waktu pengerjaan selama 14 hari kerja."
+            },
+            SPH: {
+                subject: "Surat Penawaran Harga Sistem IPAL Terintegrasi",
+                body1: "Menindaklanjuti permintaan konsultasi teknis sebelumnya, berikut kami sampaikan penawaran harga terbaik untuk sistem pengolahan air limbah domestik Bapak/Ibu.",
+                body2: "Unit yang kami tawarkan menggunakan sistem filtrasi berlapis dengan media karbon aktif grade-A dan resin kation. Harga yang tercantum sudah termasuk ongkos kirim dan jasa instalasi pipa area Pati & sekitarnya."
+            },
+            SKT: {
+                subject: "Surat Keterangan Teknis Kelayakan Unit",
+                body1: "Bersama surat ini, kami menerangkan bahwa unit filter yang terpasang di lokasi telah melewati tahap uji fungsi (Quality Control).",
+                body2: "Berdasarkan pengujian lapangan, debit air dan tingkat kejernihan (TDS/pH) telah memenuhi standar baku mutu air bersih domestik. Unit dinyatakan layak beroperasi secara penuh untuk kebutuhan harian."
+            }
+        };
+
+        // Algoritma Penomoran Surat
+        function generateDocNumber() {
+            const cat = document.getElementById('in-category').value;
+            const now = new Date();
+            const romanMonths = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+            const month = romanMonths[now.getMonth()];
+            const year = now.getFullYear();
+            
+            const randomID = Math.floor(100 + Math.random() * 900); 
+            const docNum = `${randomID}/YF-${cat}/${month}/${year}`;
+            
+            document.getElementById('in-doc-num').value = docNum;
+            
+            if(templates[cat]) {
+                document.getElementById('in-body-1').value = templates[cat].body1;
+                document.getElementById('in-body-2').value = templates[cat].body2;
             }
         }
 
@@ -317,8 +331,8 @@
             const draw = (e) => {
                 if (!drawing) return;
                 const rect = sigCanvas.getBoundingClientRect();
-                const x = (e.clientX || e.touches[0].clientX) - rect.left;
-                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
                 sigCtx.lineTo(x, y);
                 sigCtx.stroke();
                 sigCtx.beginPath();
@@ -377,28 +391,29 @@
         }
 
         function syncPreview() {
-            const fields = [
-                'company', 'slogan', 'address', 'phone', 
-                'recipient', 'location', 'subject', 
-                'doc-num', 'attachment', 'body-1', 'body-2',
-                'signer-name', 'signer-title'
-            ];
-            fields.forEach(f => {
-                const val = document.getElementById(`in-${f}`).value;
-                const out = document.getElementById(`out-${f}`);
-                if(out) out.innerText = val;
-            });
+            const mapping = {
+                'out-doc-num': 'in-doc-num',
+                'out-attachment': 'in-attachment',
+                'out-recipient': 'in-recipient',
+                'out-recipient-title': 'in-recipient-title',
+                'out-location': 'in-location',
+                'out-body-1': 'in-body-1',
+                'out-body-2': 'in-body-2',
+                'out-signer-name': 'in-signer-name',
+                'out-signer-title': 'in-signer-title'
+            };
+
+            for (let outID in mapping) {
+                const el = document.getElementById(mapping[outID]);
+                document.getElementById(outID).innerText = el.value;
+            }
+
+            const cat = document.getElementById('in-category').value;
+            document.getElementById('out-subject').innerText = templates[cat].subject;
 
             const now = new Date();
             const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            document.getElementById('out-date').innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-
-            const logoContainer = document.getElementById('out-logo-container');
-            if (uploadedLogoUrl) {
-                logoContainer.innerHTML = `<img src="${uploadedLogoUrl}" style="max-height: 80px;" class="object-contain">`;
-            } else {
-                logoContainer.innerHTML = `<img src="logo.png" style="max-height: 80px;" onerror="this.style.display='none'" class="object-contain">`;
-            }
+            document.getElementById('out-date').innerText = `Pati, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
 
             const img = document.getElementById('out-sig-img');
             img.src = sigCanvas.toDataURL();
@@ -421,19 +436,17 @@
             printArea.style.transform = 'scale(1)';
             printArea.style.marginBottom = '0px';
 
-            try {
-                const canvas = await html2canvas(printArea, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-                const link = document.createElement('a');
-                link.download = `Surat-Addendum-${document.getElementById('in-recipient').value}.jpg`;
-                link.href = canvas.toDataURL('image/jpeg', 0.95);
-                link.click();
-            } catch (err) {
-                console.error("Gagal membuat gambar:", err);
-            }
+            const canvas = await html2canvas(printArea, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+            const link = document.createElement('a');
+            link.download = `Surat-${document.getElementById('in-category').value}-${Date.now()}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
 
             printArea.style.transform = originalTransform;
             handleMobileScaling();
         }
+
+        generateDocNumber();
     </script>
 </body>
 </html>
