@@ -3,460 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>e-Nota Digital Signature - Gemah Rifah</title>
-    <!-- Libraries -->
+    <title>Dashboard Administrasi - Yudi Filter</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        /* Step Transition */
-        .step-content { display: none; }
-        .step-content.active { display: block; }
-
-        /* Mobile Paper Logic */
-        .paper-container {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            display: flex;
-            justify-content: center;
-        }
-
-        #print-area {
-            min-width: 210mm;
-            min-height: 297mm;
-            background: white;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            transform-origin: top center;
-        }
-
-        /* Signature Pad */
-        .sig-canvas {
-            touch-action: none;
-            background-color: #f8fafc;
-            border: 2px dashed #e2e8f0;
-            border-radius: 1rem;
-            cursor: crosshair;
-        }
-
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white; margin: 0; padding: 0; }
-            #print-area { 
-                box-shadow: none !important; 
-                border: none !important; 
-                width: 100% !important; 
-                padding: 10mm !important;
-                margin: 0 !important;
-                transform: scale(1) !important;
-                min-height: auto;
-            }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen pb-32">
+<body class="bg-slate-50 text-slate-900 min-h-screen">
 
-    <!-- Stepper Navigation -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 no-print shadow-sm">
-        <div class="max-w-4xl mx-auto px-4 py-3">
-            <div class="flex items-center justify-between relative">
-                <div class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100 -translate-y-1/2 z-0"></div>
-                <!-- 5 Steps Now -->
-                <div class="step-dot active z-10 flex flex-col items-center gap-1" data-step="1">
-                    <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold ring-4 ring-white">1</div>
-                    <span class="text-[8px] font-bold text-blue-600 uppercase">Toko</span>
-                </div>
-                <div class="step-dot z-10 flex flex-col items-center gap-1" data-step="2">
-                    <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white">2</div>
-                    <span class="text-[8px] font-bold text-slate-400 uppercase">Tamu</span>
-                </div>
-                <div class="step-dot z-10 flex flex-col items-center gap-1" data-step="3">
-                    <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white">3</div>
-                    <span class="text-[8px] font-bold text-slate-400 uppercase">Item</span>
-                </div>
-                <div class="step-dot z-10 flex flex-col items-center gap-1" data-step="4">
-                    <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white">4</div>
-                    <span class="text-[8px] font-bold text-slate-400 uppercase">TTD</span>
-                </div>
-                <div class="step-dot z-10 flex flex-col items-center gap-1" data-step="5">
-                    <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white">5</div>
-                    <span class="text-[8px] font-bold text-slate-400 uppercase">Preview</span>
-                </div>
+    <!-- Hero Section & Branding -->
+    <header class="bg-blue-600 pt-16 pb-32 px-6 relative overflow-hidden">
+        <!-- Dekorasi Background -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0,100 C30,50 70,50 100,100 Z" fill="white" />
+            </svg>
+        </div>
+        
+        <div class="max-w-5xl mx-auto relative z-10 text-center lg:text-left flex flex-col lg:flex-row items-center gap-8">
+            <div class="w-24 h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center p-4">
+                <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/100?text=YF'" class="max-w-full max-h-full object-contain">
+            </div>
+            <div>
+                <h1 class="text-3xl lg:text-4xl font-black text-white tracking-tighter uppercase">Dashboard Administrasi</h1>
+                <p class="text-blue-100 text-sm lg:text-base font-medium mt-1">YUDI FILTER – Ahli Air Domestik | Cekatan, Tepat, Mengalir Sempurna</p>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="max-w-4xl mx-auto p-4 lg:p-8">
-        
-        <!-- STEP 1: TOKO -->
-        <section id="step-1" class="step-content active space-y-6">
-            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h2 class="text-xl font-black mb-6">🏢 Identitas Toko</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="in-company" value="GEMAH RIFAH FILTER" class="w-full border p-4 rounded-2xl text-sm outline-none" placeholder="Nama Bisnis">
-                    <input type="text" id="in-subtitle" value="Pusat Perakitan Depo Air Isi Ulang" class="w-full border p-4 rounded-2xl text-sm outline-none" placeholder="Slogan">
-                    <textarea id="in-address" class="w-full border p-4 rounded-2xl text-sm outline-none md:col-span-2" rows="2">Jl. Raya Pati-kayen Km 12 Ds Sundoluhur Kec Kayen, Pati.</textarea>
-                    <input type="text" id="in-phone" value="08988147186" class="w-full border p-4 rounded-2xl text-sm outline-none" placeholder="WhatsApp">
+    <!-- Main Menu Grid -->
+    <main class="max-w-5xl mx-auto px-6 -mt-16 relative z-20 pb-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Menu 1: e-Nota -->
+            <a href="nota.html" class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group hover:bg-blue-600 hover:-translate-y-2 transition-all duration-300">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
                 </div>
-            </div>
-        </section>
-
-        <!-- STEP 2: TAMU -->
-        <section id="step-2" class="step-content space-y-6">
-            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h2 class="text-xl font-black mb-6">👤 Data Pelanggan</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="in-customer" value="Muh Iqbal Faisal" class="w-full border p-4 rounded-2xl text-sm font-bold outline-none" placeholder="Nama Pelanggan">
-                    <input type="text" id="in-cust-phone" value="6285292624392" class="w-full border p-4 rounded-2xl text-sm outline-none" placeholder="No. HP">
-                    <input type="text" id="in-cust-addr" value="Dapur MBG suwawal" class="w-full border p-4 rounded-2xl text-sm outline-none md:col-span-2" placeholder="Alamat">
-                    <input type="text" id="in-sales" value="Yudi Filter" class="w-full border p-4 rounded-2xl text-sm outline-none" placeholder="Salesman">
-                    <input type="text" id="in-due" value="+24044-08-02 (8042026 hari)" class="w-full border p-4 rounded-2xl text-sm outline-none" placeholder="Jatuh Tempo">
+                <h3 class="text-xl font-black group-hover:text-white transition-colors uppercase tracking-tighter">e-Nota Digital</h3>
+                <p class="text-slate-500 group-hover:text-blue-50 text-sm mt-2 leading-relaxed">Buat kwitansi pembayaran, DP, dan pelunasan paket filter secara instan.</p>
+                <div class="mt-6 flex items-center gap-2 text-blue-600 group-hover:text-white font-bold text-xs uppercase tracking-widest">
+                    Buka Tool <span class="group-hover:translate-x-2 transition-transform">→</span>
                 </div>
-            </div>
-        </section>
+            </a>
 
-        <!-- STEP 3: ITEM -->
-        <section id="step-3" class="step-content space-y-6">
-            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-black">📦 Detail Barang</h2>
-                    <button onclick="addItem()" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold">+ Tambah</button>
+            <!-- Menu 2: Surat Pernyataan / Addendum -->
+            <a href="surat.html" class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group hover:bg-indigo-600 hover:-translate-y-2 transition-all duration-300">
+                <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
                 </div>
-                <div id="item-list-container" class="space-y-4 mb-8"></div>
-                <div class="bg-slate-900 p-6 rounded-3xl text-white">
-                    <label class="block text-[10px] font-bold opacity-40 uppercase mb-1">Jumlah Bayar (DP)</label>
-                    <input type="number" id="in-pay" value="0" class="bg-transparent border-none text-3xl font-black w-full focus:outline-none">
+                <h3 class="text-xl font-black group-hover:text-white transition-colors uppercase tracking-tighter">Surat Pernyataan</h3>
+                <p class="text-slate-500 group-hover:text-indigo-50 text-sm mt-2 leading-relaxed">Formulir penyesuaian harga (Addendum) akibat fluktuasi harga pasar.</p>
+                <div class="mt-6 flex items-center gap-2 text-indigo-600 group-hover:text-white font-bold text-xs uppercase tracking-widest">
+                    Buka Tool <span class="group-hover:translate-x-2 transition-transform">→</span>
                 </div>
-                <div class="mt-6">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">Catatan Tambahan</label>
-                    <textarea id="in-footer-note" class="w-full border p-4 rounded-2xl text-sm outline-none" rows="2" placeholder="Contoh: Barang sudah diterima..."></textarea>
+            </a>
+
+            <!-- Menu 3: Surat Perjanjian (Placeholder) -->
+            <div class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group opacity-60 cursor-not-allowed">
+                <div class="w-14 h-14 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
                 </div>
-            </div>
-        </section>
-
-        <!-- STEP 4: TANDA TANGAN (NEW) -->
-        <section id="step-4" class="step-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Signature 1: Tanda Terima -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-black text-lg">🖋️ Tanda Terima</h3>
-                        <button onclick="clearSig('canvas-penerima')" class="text-xs font-bold text-red-500 hover:bg-red-50 px-2 py-1 rounded-lg">Hapus</button>
-                    </div>
-                    <canvas id="canvas-penerima" class="sig-canvas w-full h-48"></canvas>
-                    <p class="text-[10px] text-slate-400 mt-2 italic text-center">(Silakan tanda tangan di dalam kotak)</p>
-                </div>
-
-                <!-- Signature 2: Hormat Kami -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-black text-lg">🖋️ Hormat Kami</h3>
-                        <button onclick="clearSig('canvas-hormat')" class="text-xs font-bold text-red-500 hover:bg-red-50 px-2 py-1 rounded-lg">Hapus</button>
-                    </div>
-                    <canvas id="canvas-hormat" class="sig-canvas w-full h-48"></canvas>
-                    <p class="text-[10px] text-slate-400 mt-2 italic text-center">(Tanda tangan penjual/sales)</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- STEP 5: PREVIEW -->
-        <section id="step-5" class="step-content space-y-6 no-print">
-            <div class="paper-container">
-                <div id="print-area" class="p-12 flex flex-col">
-                    <!-- Header Nota -->
-                    <div class="flex justify-between items-start mb-6 text-black">
-                        <div class="flex gap-6">
-                            <div class="w-24 h-24 bg-slate-50 border border-slate-100 flex items-center justify-center">
-                                <svg viewBox="0 0 100 100" class="w-14 h-14"><path d="M50,10 Q35,40 35,65 A15,15 0 1,0 65,65 Q65,40 50,10 Z" fill="#2563eb" /></svg>
-                            </div>
-                            <div>
-                                <h1 id="out-company" class="text-2xl font-black uppercase"></h1>
-                                <p id="out-subtitle" class="text-lg font-semibold opacity-70"></p>
-                                <div id="out-address" class="text-[11px] leading-tight mt-2 max-w-[280px]"></div>
-                                <p id="out-phone" class="text-[12px] font-bold mt-1"></p>
-                            </div>
-                        </div>
-                        <div class="text-[13px] w-48">
-                            <div class="flex justify-between border-b border-black/10 mb-4 pb-1"><span>Tgl:</span><span id="out-date" class="font-bold"></span></div>
-                            <p class="text-[10px] opacity-60 uppercase font-bold">Kepada Yth.</p>
-                            <p id="out-customer" class="font-black uppercase text-base"></p>
-                            <p id="out-cust-addr" class="leading-tight"></p>
-                            <p id="out-cust-phone" class="font-medium"></p>
-                        </div>
-                    </div>
-
-                    <div class="border-t-2 border-black"></div>
-                    <div class="flex justify-between py-1 text-[11px] font-bold text-black uppercase">
-                        <span id="out-due"></span><span id="out-sales"></span>
-                    </div>
-                    <div class="border-t-2 border-black mb-4"></div>
-
-                    <table class="w-full text-black mb-auto">
-                        <thead><tr class="text-[11px] font-black uppercase border-b border-black"><th class="py-2 text-left w-8">NO</th><th class="py-2 text-left w-32">BANYAKNYA</th><th class="py-2 text-center">NAMA ITEM</th><th class="py-2 text-right">HARGA</th><th class="py-2 text-right">JUMLAH</th></tr></thead>
-                        <tbody id="table-body" class="text-[13px]"></tbody>
-                    </table>
-
-                    <!-- Disclaimer & Footer Note -->
-                    <div class="mt-8 p-3 border border-black/10 rounded bg-slate-50/50 text-[10px] text-black">
-                        <p class="font-bold uppercase tracking-tighter">⚠️ PERHATIAN:</p>
-                        <ul class="mt-1 list-disc pl-4 opacity-70 space-y-0.5">
-                            <li>Harga barang sewaktu-waktu dapat berubah mengikuti fluktuatif harga pasar.</li>
-                            <li>Barang yang sudah dibeli tidak dapat dikembalikan tanpa perjanjian.</li>
-                            <li id="out-footer-note" class="font-bold opacity-100 italic"></li>
-                        </ul>
-                    </div>
-
-                    <!-- Summary -->
-                    <div class="mt-6 pt-2 border-t-2 border-black text-black">
-                        <div class="flex justify-between items-start">
-                            <div id="out-qty-total" class="text-xs font-bold opacity-60"></div>
-                            <div class="w-80">
-                                <div class="flex justify-between items-end mb-1"><span class="text-base font-black uppercase">TOTAL</span><span id="out-total" class="text-2xl font-black tracking-tighter"></span></div>
-                                <div class="flex justify-between items-center text-sm"><span>BAYAR</span><span id="out-pay"></span></div>
-                                <div class="border-t border-black my-1"></div>
-                                <div class="flex justify-between items-center text-sm font-black uppercase"><span>SISA</span><span id="out-sisa"></span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tanda Tangan Rendering -->
-                    <div class="flex justify-between items-end mt-16 text-black">
-                        <div class="text-center w-48">
-                            <p class="text-xs font-bold mb-2">Tanda Terima</p>
-                            <div class="h-24 flex items-center justify-center border-b-2 border-black overflow-hidden">
-                                <img id="out-sig-penerima" class="max-h-full max-w-full object-contain hidden" src="" alt="TTD">
-                            </div>
-                        </div>
-                        <div class="text-center pb-4 opacity-40 italic text-[10px] font-bold">*** Thank You ***</div>
-                        <div class="text-center w-48">
-                            <p class="text-xs font-bold mb-2">Hormat Kami</p>
-                            <div class="h-24 flex items-center justify-center border-b-2 border-black overflow-hidden">
-                                <img id="out-sig-hormat" class="max-h-full max-w-full object-contain hidden" src="" alt="TTD">
-                            </div>
-                        </div>
-                    </div>
+                <h3 class="text-xl font-black uppercase tracking-tighter">Surat Perjanjian</h3>
+                <p class="text-slate-500 text-sm mt-2 leading-relaxed">Kontrak kerjasama pemasangan unit IPAL (Dalam Pengembangan).</p>
+                <div class="mt-6 text-slate-400 font-bold text-[10px] uppercase tracking-widest italic">
+                    Coming Soon
                 </div>
             </div>
 
-            <!-- Print/Download -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-12">
-                <button onclick="window.print()" class="bg-slate-900 text-white py-5 rounded-2xl font-black shadow-xl hover:bg-black transition">🖨️ PRINT PDF</button>
-                <button onclick="downloadImage()" class="bg-blue-600 text-white py-5 rounded-2xl font-black shadow-xl hover:bg-blue-700 transition">🖼️ DOWNLOAD JPG</button>
+            <!-- Menu 4: Surat Lainnya (Placeholder) -->
+            <div class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group opacity-60 cursor-not-allowed">
+                <div class="w-14 h-14 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-black uppercase tracking-tighter">Arsip Surat</h3>
+                <p class="text-slate-500 text-sm mt-2 leading-relaxed">Penyimpanan dokumen internal dan log pengiriman barang.</p>
+                <div class="mt-6 text-slate-400 font-bold text-[10px] uppercase tracking-widest italic">
+                    Coming Soon
+                </div>
             </div>
-        </section>
 
+        </div>
     </main>
 
-    <!-- Nav Bottom -->
-    <div class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-200 p-4 no-print z-[60]">
-        <div class="max-w-4xl mx-auto flex justify-between gap-4">
-            <button id="prevBtn" onclick="changeStep(-1)" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-black disabled:hidden">KEMBALI</button>
-            <button id="nextBtn" onclick="changeStep(1)" class="flex-[2] bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg">LANJUTKAN</button>
-        </div>
-    </div>
+    <footer class="text-center pb-12">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">© 2026 Yudi Filter Official System</p>
+        <p class="text-[10px] text-slate-300 mt-1 uppercase tracking-tighter">Designed for High-Performance Administration</p>
+    </footer>
 
-    <script>
-        let currentStep = 1;
-        let items = [{ id: 1, qty: "1 Unit", name: "Filter Paket C-2000", price: 28500000, note: "Pemasangan Kayen" }];
-        const canvases = {};
-        const ctxs = {};
-
-        // Inisialisasi Signature Pad
-        function initSignaturePad(id) {
-            const canvas = document.getElementById(id);
-            const parent = canvas.parentElement;
-            canvas.width = parent.offsetWidth;
-            canvas.height = parent.offsetHeight - 40; // Kurangi padding h3
-            
-            const ctx = canvas.getContext('2d');
-            ctx.lineWidth = 2.5;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#0f172a'; // Slate 900
-            
-            canvases[id] = canvas;
-            ctxs[id] = ctx;
-
-            let drawing = false;
-
-            const startPos = (e) => { 
-                drawing = true; 
-                draw(e); 
-            };
-            const endPos = () => { 
-                drawing = false; 
-                ctx.beginPath(); 
-            };
-            const draw = (e) => {
-                if (!drawing) return;
-                const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || e.touches[0].clientX) - rect.left;
-                const y = (e.clientY || e.touches[0].clientY) - rect.top;
-                
-                ctx.lineTo(x, y);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(x, y);
-            };
-
-            canvas.addEventListener('mousedown', startPos);
-            canvas.addEventListener('mouseup', endPos);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startPos(e); });
-            canvas.addEventListener('touchend', (e) => { e.preventDefault(); endPos(); });
-            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); });
-        }
-
-        function clearSig(id) {
-            const ctx = ctxs[id];
-            const canvas = canvases[id];
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function changeStep(n) {
-            const nextStep = currentStep + n;
-            if (nextStep < 1 || nextStep > 5) return;
-
-            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
-            document.getElementById(`step-${nextStep}`).classList.add('active');
-
-            // Update Dot
-            document.querySelectorAll('.step-dot').forEach((dot, idx) => {
-                const s = idx + 1;
-                const circle = dot.querySelector('div');
-                const label = dot.querySelector('span');
-                if (s < nextStep) {
-                    circle.className = "w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold ring-4 ring-white";
-                    circle.innerText = "✓";
-                } else if (s === nextStep) {
-                    circle.className = "w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold ring-4 ring-white";
-                    circle.innerText = s;
-                    label.classList.add('text-blue-600');
-                } else {
-                    circle.className = "w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px] font-bold ring-4 ring-white";
-                    circle.innerText = s;
-                }
-            });
-
-            currentStep = nextStep;
-            document.getElementById('prevBtn').classList.toggle('hidden', currentStep === 1);
-            document.getElementById('nextBtn').innerText = currentStep === 5 ? "Selesai" : (currentStep === 4 ? "Lanjut Preview" : "Lanjutkan");
-            
-            if (currentStep === 4) {
-                // Beri sedikit delay agar DOM canvas ter-render sebelum di-init
-                setTimeout(() => {
-                    initSignaturePad('canvas-penerima');
-                    initSignaturePad('canvas-hormat');
-                }, 100);
-            }
-
-            if (currentStep === 5) {
-                syncPreview();
-                handleMobileScaling();
-                document.getElementById('nextBtn').classList.add('hidden');
-            } else {
-                document.getElementById('nextBtn').classList.remove('hidden');
-            }
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function syncPreview() {
-            // Text Sync
-            ['company', 'subtitle', 'address', 'phone', 'customer', 'cust-addr', 'cust-phone', 'due', 'sales', 'footer-note'].forEach(f => {
-                const val = document.getElementById(`in-${f}`).value;
-                const out = document.getElementById(`out-${f}`);
-                out.innerText = (f === 'due' ? 'Jatuh Tempo ' : (f === 'sales' ? 'Salesman ' : '')) + val;
-            });
-
-            // Date
-            const now = new Date();
-            document.getElementById('out-date').innerText = `${now.getDate()} April ${now.getFullYear()}`;
-
-            // Signature Sync
-            ['penerima', 'hormat'].forEach(id => {
-                const canvas = canvases[`canvas-${id}`];
-                const img = document.getElementById(`out-sig-${id}`);
-                // Hanya tampilkan jika canvas tidak kosong (secara visual)
-                const dataUrl = canvas.toDataURL();
-                img.src = dataUrl;
-                img.classList.remove('hidden');
-            });
-
-            // Table Sync
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            let total = 0;
-            items.forEach((item, i) => {
-                total += Number(item.price);
-                tbody.innerHTML += `
-                    <tr class="align-top border-b border-black/5">
-                        <td class="py-4">${i+1}</td>
-                        <td class="py-4 uppercase font-medium">${item.qty}</td>
-                        <td class="py-4"><div class="font-bold uppercase">${item.name}</div><div class="text-[10px] italic opacity-50 lowercase">${item.note}</div></td>
-                        <td class="py-4 text-right">${new Intl.NumberFormat('id-ID').format(item.price)}</td>
-                        <td class="py-4 text-right font-black">${new Intl.NumberFormat('id-ID').format(item.price)}</td>
-                    </tr>
-                `;
-            });
-
-            const pay = Number(document.getElementById('in-pay').value);
-            document.getElementById('out-qty-total').innerText = `Total Qty: ${items.length} Item`;
-            document.getElementById('out-total').innerText = new Intl.NumberFormat('id-ID').format(total);
-            document.getElementById('out-pay').innerText = new Intl.NumberFormat('id-ID').format(pay);
-            document.getElementById('out-sisa').innerText = new Intl.NumberFormat('id-ID').format(total - pay);
-        }
-
-        function handleMobileScaling() {
-            if (window.innerWidth < 1024) {
-                const paper = document.getElementById('print-area');
-                const scale = (document.querySelector('.paper-container').offsetWidth - 32) / 794;
-                paper.style.transform = `scale(${scale})`;
-                paper.style.marginBottom = `-${794 * (1.6 - scale)}px`;
-            }
-        }
-
-        async function downloadImage() {
-            const printArea = document.getElementById('print-area');
-            const originalTransform = printArea.style.transform;
-            printArea.style.transform = 'scale(1)';
-            printArea.style.marginBottom = '0px';
-
-            const canvas = await html2canvas(printArea, { scale: 2, useCORS: true });
-            const link = document.createElement('a');
-            link.download = `Nota-${document.getElementById('in-customer').value}.jpg`;
-            link.href = canvas.toDataURL('image/jpeg', 0.9);
-            link.click();
-
-            printArea.style.transform = originalTransform;
-            handleMobileScaling();
-        }
-
-        function addItem() { items.push({ id: Date.now(), qty: "", name: "", price: 0, note: "" }); renderItemInputs(); }
-        function removeItem(i) { if(items.length > 1) { items.splice(i, 1); renderItemInputs(); } }
-        function updateItem(i, f, v) { items[i][f] = v; }
-
-        function renderItemInputs() {
-            const container = document.getElementById('item-list-container');
-            container.innerHTML = '';
-            items.forEach((item, i) => {
-                container.innerHTML += `
-                    <div class="p-5 bg-slate-50 border border-slate-200 rounded-3xl space-y-4">
-                        <div class="grid grid-cols-4 gap-2">
-                            <input type="text" value="${item.qty}" oninput="updateItem(${i}, 'qty', this.value)" class="col-span-1 border p-3 rounded-xl text-xs" placeholder="Qty">
-                            <input type="text" value="${item.name}" oninput="updateItem(${i}, 'name', this.value)" class="col-span-3 border p-3 rounded-xl text-xs font-bold" placeholder="Nama Barang">
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="number" value="${item.price}" oninput="updateItem(${i}, 'price', this.value)" class="border p-3 rounded-xl text-xs font-bold" placeholder="Harga">
-                            <button onclick="removeItem(${i})" class="bg-red-50 text-red-500 py-3 rounded-xl text-[10px] font-black uppercase">Hapus</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        renderItemInputs();
-    </script>
 </body>
 </html>
