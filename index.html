@@ -1,109 +1,403 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Administrasi - Yudi Filter</title>
+    <title>Yudi Filter - Solusi Pengolahan Air & IPAL MBG</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config Customization -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
         }
+    </script>
+
+    <style>
+        /* Custom styles for elements that need fine-tuning */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Advanced Card Hover Animation (Framer-like) */
+        .card-anim {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-anim:hover {
+            transform: translateY(-12px) scale(1.02);
+        }
+        
+        /* Custom Glows */
+        .glow-blue:hover { box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.25); }
+        .glow-emerald:hover { box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25); }
+        .glow-amber:hover { box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.2); }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
+<body class="font-sans text-slate-800 bg-slate-50 antialiased selection:bg-brand-500 selection:text-white">
 
-    <!-- Hero Section & Branding -->
-    <header class="bg-blue-600 pt-16 pb-32 px-6 relative overflow-hidden">
-        <!-- Dekorasi Background -->
-        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path d="M0,100 C30,50 70,50 100,100 Z" fill="white" />
-            </svg>
-        </div>
-        
-        <div class="max-w-5xl mx-auto relative z-10 text-center lg:text-left flex flex-col lg:flex-row items-center gap-8">
-            <div class="w-24 h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center p-4">
-                <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/100?text=YF'" class="max-w-full max-h-full object-contain">
-            </div>
-            <div>
-                <h1 class="text-3xl lg:text-4xl font-black text-white tracking-tighter uppercase">Dashboard Administrasi</h1>
-                <p class="text-blue-100 text-sm lg:text-base font-medium mt-1">YUDI FILTER – Ahli Air Domestik | Cekatan, Tepat, Mengalir Sempurna</p>
+    <!-- Navigation -->
+    <header class="fixed w-full top-0 z-50 glass-nav border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        <i data-lucide="droplets"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-2xl text-slate-900 tracking-tight">Yudi<span class="text-brand-600">Filter</span></h1>
+                        <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider">Water Treatment Solution</p>
+                    </div>
+                </div>
+                
+                <!-- CTA CTA Desktop -->
+                <div class="hidden md:flex items-center gap-4">
+                    <a href="#produk" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">Lihat Produk</a>
+                    <a href="https://wa.me/628988147186?text=Halo%20Yudi%20Filter,%20saya%20ingin%20konsultasi%20mengenai%20produk%20IPAL." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-full font-medium transition-colors shadow-sm shadow-emerald-500/30">
+                        <i data-lucide="phone" class="w-4 h-4"></i>
+                        Hubungi Kami
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Menu Grid -->
-    <main class="max-w-5xl mx-auto px-6 -mt-16 relative z-20 pb-20">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- Menu 1: e-Nota -->
-            <a href="enota.html" class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group hover:bg-blue-600 hover:-translate-y-2 transition-all duration-300">
-                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                </div>
-                <h3 class="text-xl font-black group-hover:text-white transition-colors uppercase tracking-tighter">e-Nota Digital</h3>
-                <p class="text-slate-500 group-hover:text-blue-50 text-sm mt-2 leading-relaxed">Buat kwitansi pembayaran, DP, dan pelunasan paket filter secara instan.</p>
-                <div class="mt-6 flex items-center gap-2 text-blue-600 group-hover:text-white font-bold text-xs uppercase tracking-widest">
-                    Buka Tool <span class="group-hover:translate-x-2 transition-transform">→</span>
-                </div>
-            </a>
-
-            <!-- Menu 2: Surat Pernyataan / Addendum -->
-            <a href="surat.html" class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group hover:bg-indigo-600 hover:-translate-y-2 transition-all duration-300">
-                <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <h3 class="text-xl font-black group-hover:text-white transition-colors uppercase tracking-tighter">Surat Pernyataan</h3>
-                <p class="text-slate-500 group-hover:text-indigo-50 text-sm mt-2 leading-relaxed">Formulir penyesuaian harga (Addendum) akibat fluktuasi harga pasar.</p>
-                <div class="mt-6 flex items-center gap-2 text-indigo-600 group-hover:text-white font-bold text-xs uppercase tracking-widest">
-                    Buka Tool <span class="group-hover:translate-x-2 transition-transform">→</span>
-                </div>
-            </a>
-
-            <!-- Menu 3: Surat Perjanjian (Placeholder) -->
-            <div class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group opacity-60 cursor-not-allowed">
-                <div class="w-14 h-14 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </div>
-                <h3 class="text-xl font-black uppercase tracking-tighter">Surat Perjanjian</h3>
-                <p class="text-slate-500 text-sm mt-2 leading-relaxed">Kontrak kerjasama pemasangan unit IPAL (Dalam Pengembangan).</p>
-                <div class="mt-6 text-slate-400 font-bold text-[10px] uppercase tracking-widest italic">
-                    Coming Soon
-                </div>
-            </div>
-
-            <!-- Menu 4: Surat Lainnya (Placeholder) -->
-            <div class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group opacity-60 cursor-not-allowed">
-                <div class="w-14 h-14 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                </div>
-                <h3 class="text-xl font-black uppercase tracking-tighter">Arsip Surat</h3>
-                <p class="text-slate-500 text-sm mt-2 leading-relaxed">Penyimpanan dokumen internal dan log pengiriman barang.</p>
-                <div class="mt-6 text-slate-400 font-bold text-[10px] uppercase tracking-widest italic">
-                    Coming Soon
-                </div>
-            </div>
-
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
+        <!-- Background Decoration -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-brand-100 via-white to-white opacity-70"></div>
         </div>
-    </main>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+                <!-- Text Content -->
+                <div class="text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-600 text-sm font-semibold mb-6 border border-brand-100">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
+                        </span>
+                        Sistem IPAL MBG Terbaik
+                    </div>
+                    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
+                        Solusi Pengolahan Air <span class="text-brand-600">Profesional & Terpercaya</span>
+                    </h2>
+                    <p class="text-lg text-slate-600 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Kami menyediakan berbagai pilihan paket Instalasi Pengolahan Air Limbah (IPAL) MBG berkualitas tinggi, dirancang khusus untuk memenuhi standar kebersihan dan efisiensi industri maupun domestik.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#produk" class="inline-flex justify-center items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-xl font-semibold transition-colors shadow-lg shadow-brand-500/30">
+                            Lihat Paket Produk
+                            <i data-lucide="arrow-down" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Hero Image (Stylized) -->
+                <div class="relative mx-auto w-full max-w-lg lg:max-w-none">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-100 aspect-[4/3] bg-slate-200">
+                        <!-- Menggunakan local asset hero.png -->
+                        <img src="hero.png" 
+                             alt="Instalasi IPAL MBG Yudi Filter" 
+                             class="object-cover w-full h-full transform hover:scale-105 transition-transform duration-700 bg-slate-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent pointer-events-none"></div>
+                        <div class="absolute bottom-6 left-6 right-6 pointer-events-none">
+                            <h3 class="text-white font-bold text-2xl drop-shadow-md">Produk IPAL MBG</h3>
+                            <p class="text-slate-200 font-medium drop-shadow-md">Toko Fibertech Global</p>
+                        </div>
+                    </div>
+                    <!-- Decorative elements -->
+                    <div class="absolute -z-10 top-1/2 -translate-y-1/2 -right-12 w-64 h-64 bg-brand-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <footer class="text-center pb-12">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">© 2026 Yudi Filter Official System</p>
-        <p class="text-[10px] text-slate-300 mt-1 uppercase tracking-tighter">Designed for High-Performance Administration</p>
+    <!-- Pricing / Packages Section -->
+    <section id="produk" class="py-24 bg-slate-50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Pilihan Paket IPAL MBG</h2>
+                <p class="text-slate-600 text-lg">Pilih kapasitas dan spesifikasi yang paling sesuai dengan kebutuhan sistem pengolahan air Anda. Hubungi kami untuk konsultasi gratis.</p>
+            </div>
+
+            <!-- CSS Grid for Layout (3 Columns for A, B, C) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
+                
+                <!-- 1. PAKET C (Warna Biru / Standar) -->
+                <div class="card-anim glow-blue flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden h-full relative group">
+                    <div class="absolute top-0 inset-x-0 h-1.5 bg-brand-500"></div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <span class="inline-block px-3 py-1 bg-brand-50 text-brand-700 font-semibold text-xs rounded-full mb-4 w-max border border-brand-100">Paling Hemat</span>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Paket C</h3>
+                        <p class="text-slate-500 text-sm mb-4">IPAL MBG + Ekstra FRP</p>
+                        <div class="mb-6 flex items-baseline gap-1">
+                            <span class="text-slate-600 font-semibold">Rp</span>
+                            <span class="text-4xl font-extrabold text-slate-900">21.500.000</span>
+                        </div>
+                        
+                        <div class="w-full h-px bg-slate-100 mb-6"></div>
+                        
+                        <!-- Features -->
+                        <ul class="space-y-4 mb-8 flex-1">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Biofilter 1000 Liter (Plus Grease Trap)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">2 Unit Pompa Submersible</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Filter Karbon Aktif</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Filter Pasir Silika</span>
+                            </li>
+                            <li class="flex items-start gap-3 p-2 bg-brand-50 rounded-lg border border-brand-100">
+                                <i data-lucide="plus-circle" class="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm font-bold text-brand-700">2 Unit Tabung FRP (Ekstra)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Blower Aerator</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Klorinator Manual & Desinfeksi</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Kontrol Panel</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Action Button -->
+                    <div class="p-8 pt-0 mt-auto">
+                        <a href="https://wa.me/628988147186?text=Halo%20Yudi%20Filter,%20saya%20tertarik%20dengan%20Paket%20C%20seharga%20Rp21.500.000." 
+                           target="_blank" rel="noopener noreferrer"
+                           class="w-full flex justify-center items-center gap-2 bg-brand-50 text-brand-700 hover:bg-brand-600 hover:text-white border border-brand-200 hover:border-brand-600 py-3.5 px-4 rounded-xl font-bold transition-all duration-300">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            Pesan Paket C
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 2. PAKET B (Warna Hijau / Rekomendasi) -->
+                <div class="card-anim glow-emerald flex flex-col bg-white rounded-3xl border-2 border-emerald-500 shadow-xl overflow-hidden h-full relative z-10 lg:-translate-y-4">
+                    <!-- Popular Badge -->
+                    <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider py-1.5 px-4 rounded-bl-xl z-10 shadow-sm">
+                        Rekomendasi
+                    </div>
+                    
+                    <div class="p-8 flex-1 flex flex-col">
+                        <span class="inline-block px-3 py-1 bg-emerald-50 text-emerald-700 font-semibold text-xs rounded-full mb-4 w-max border border-emerald-100">Menengah</span>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Paket B</h3>
+                        <p class="text-slate-500 text-sm mb-4">Ipal MBG 2 MPD</p>
+                        <div class="mb-6 flex items-baseline gap-1">
+                            <span class="text-slate-600 font-semibold">Rp</span>
+                            <span class="text-4xl font-extrabold text-emerald-600">30.000.000</span>
+                        </div>
+                        
+                        <div class="w-full h-px bg-slate-100 mb-6"></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-1">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Biofilter Anaerob & Aerob 2000 liter</span>
+                            </li>
+                            <!-- Tambahan Grease Trap -->
+                            <li class="flex items-start gap-3 p-2 bg-emerald-50 rounded-lg border border-emerald-100">
+                                <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm font-bold text-emerald-700">1 Unit Grease Trap 500 Liter</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">2 Unit Pompa Sentrifugal</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">2 Unit Carbon Aktif & 2 Unit Silika</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">2 Unit Tabung FRP</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Bak Klorin & Bak Desinfeksi</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Kontrol Panel</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Unit Bak Pengendapan 1100 Liter</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-700">1 Bak Sendimen Awal & Pengendapan Akhir</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-8 pt-0 mt-auto">
+                        <a href="https://wa.me/628988147186?text=Halo%20Yudi%20Filter,%20saya%20tertarik%20dengan%20Paket%20B%20Ipal%20MBG%202%20MPD%20seharga%20Rp30.000.000." 
+                           target="_blank" rel="noopener noreferrer"
+                           class="w-full flex justify-center items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white py-4 px-4 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-emerald-500/30">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            Pesan Paket B
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 3. PAKET A (Warna Gelap & Emas / Premium) -->
+                <div class="card-anim glow-amber flex flex-col bg-slate-900 rounded-3xl border border-slate-700 shadow-xl overflow-hidden h-full relative">
+                    <div class="absolute top-0 inset-x-0 h-1.5 bg-amber-400"></div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <span class="inline-block px-3 py-1 bg-amber-400/10 text-amber-400 font-semibold text-xs rounded-full mb-4 w-max border border-amber-400/20">Premium</span>
+                        <h3 class="text-2xl font-bold text-white mb-2">Paket A</h3>
+                        <p class="text-slate-400 text-sm mb-4">Ipal MBG 3 MPD</p>
+                        <div class="mb-6 flex items-baseline gap-1">
+                            <span class="text-slate-400 font-semibold">Rp</span>
+                            <span class="text-4xl font-extrabold text-white">39.000.000</span>
+                        </div>
+                        
+                        <div class="w-full h-px bg-slate-800 mb-6"></div>
+                        
+                        <ul class="space-y-4 mb-8 flex-1">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-300">1 Unit Biofilter Anaerob, Aerob & Grease Trap 3000 liter</span>
+                            </li>
+                            <!-- Tambahan Grease Trap -->
+                            <li class="flex items-start gap-3 p-2 bg-slate-800 rounded-lg border border-slate-700">
+                                <i data-lucide="plus-circle" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm font-bold text-amber-400">1 Unit Grease Trap 500 Liter</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-300">2 Unit Pompa Sentrifugal Semiportable</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-300">2 Unit Carbon Aktif & 2 Unit Silika</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-300">2 Unit Tabung FRP 1054</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-300">2 Unit Blower/Aerator</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-300">1 Unit Bak Klorin & Bak Desinfeksi</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-300">1 Unit Kontrol Panel</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-sm text-slate-300">1 Unit Bak Pengendapan 1100 Liter, Sendimen Awal & Akhir</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-8 pt-0 mt-auto">
+                        <a href="https://wa.me/628988147186?text=Halo%20Yudi%20Filter,%20saya%20tertarik%20dengan%20Paket%20A%20Ipal%20MBG%203%20MPD%20seharga%20Rp39.000.000." 
+                           target="_blank" rel="noopener noreferrer"
+                           class="w-full flex justify-center items-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-900 py-3.5 px-4 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-amber-400/20">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            Pesan Paket A
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact Section -->
+    <footer class="bg-slate-950 text-slate-300 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <!-- Brand Info -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-brand-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                            <i data-lucide="droplets"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-2xl text-white tracking-tight">Yudi<span class="text-brand-500">Filter</span></h2>
+                            <p class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Water Treatment Solution</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 max-w-md">Solusi cerdas dan profesional untuk kebutuhan Instalasi Pengolahan Air Limbah Anda. Kami siap memberikan penawaran dan pelayanan terbaik.</p>
+                </div>
+                
+                <!-- Contact Action -->
+                <div class="md:text-right">
+                    <p class="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-3">Butuh Konsultasi Langsung?</p>
+                    <div class="inline-flex flex-col sm:flex-row items-center gap-4">
+                        <div class="bg-white p-2 rounded-lg inline-block">
+                            <!-- Placeholder for QR Code -->
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://wa.me/628988147186" alt="QR Code WhatsApp" class="w-16 h-16 rounded">
+                        </div>
+                        <a href="https://wa.me/628988147186" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 group">
+                            <div class="w-14 h-14 bg-emerald-500 group-hover:bg-emerald-400 text-white rounded-full flex justify-center items-center transition-colors shadow-lg shadow-emerald-500/20">
+                                <i data-lucide="phone" class="w-6 h-6"></i>
+                            </div>
+                            <div class="text-left">
+                                <span class="block text-xs font-semibold text-slate-400">Hubungi Saya</span>
+                                <span class="block text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors">0898 8147 186</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-slate-800 text-center text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p>&copy; 2026 Yudi Filter - Toko Fibertech Global. All rights reserved.</p>
+                <p>Designed with precision for industry standards.</p>
+            </div>
+        </div>
     </footer>
 
+    <!-- Initialize Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
