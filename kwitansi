@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrasi - Yudi Filter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+    <!-- Hero Section & Branding -->
+    <header class="bg-blue-600 pt-16 pb-32 px-6 relative overflow-hidden">
+        <!-- Dekorasi Background -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0,100 C30,50 70,50 100,100 Z" fill="white" />
+            </svg>
+        </div>
+        
+        <div class="max-w-5xl mx-auto relative z-10 text-center lg:text-left flex flex-col lg:flex-row items-center gap-8">
+            <div class="w-24 h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center p-4">
+                <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/100?text=YF'" class="max-w-full max-h-full object-contain">
+            </div>
+            <div>
+                <h1 class="text-3xl lg:text-4xl font-black text-white tracking-tighter uppercase">Dashboard Administrasi</h1>
+                <p class="text-blue-100 text-sm lg:text-base font-medium mt-1">YUDI FILTER – Ahli Air Domestik | Cekatan, Tepat, Mengalir Sempurna</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Menu Grid -->
+    <main class="max-w-5xl mx-auto px-6 -mt-16 relative z-20 pb-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Menu 1: e-Nota -->
+            <a href="enota.html" class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group hover:bg-blue-600 hover:-translate-y-2 transition-all duration-300">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-black group-hover:text-white transition-colors uppercase tracking-tighter">e-Nota Digital</h3>
+                <p class="text-slate-500 group-hover:text-blue-50 text-sm mt-2 leading-relaxed">Buat kwitansi pembayaran, DP, dan pelunasan paket filter secara instan.</p>
+                <div class="mt-6 flex items-center gap-2 text-blue-600 group-hover:text-white font-bold text-xs uppercase tracking-widest">
+                    Buka Tool <span class="group-hover:translate-x-2 transition-transform">→</span>
+                </div>
+            </a>
+
+            <!-- Menu 2: Surat Pernyataan / Addendum -->
+            <a href="surat.html" class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group hover:bg-indigo-600 hover:-translate-y-2 transition-all duration-300">
+                <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-black group-hover:text-white transition-colors uppercase tracking-tighter">Surat Pernyataan</h3>
+                <p class="text-slate-500 group-hover:text-indigo-50 text-sm mt-2 leading-relaxed">Formulir penyesuaian harga (Addendum) akibat fluktuasi harga pasar.</p>
+                <div class="mt-6 flex items-center gap-2 text-indigo-600 group-hover:text-white font-bold text-xs uppercase tracking-widest">
+                    Buka Tool <span class="group-hover:translate-x-2 transition-transform">→</span>
+                </div>
+            </a>
+
+            <!-- Menu 3: Surat Perjanjian (Placeholder) -->
+            <div class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group opacity-60 cursor-not-allowed">
+                <div class="w-14 h-14 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-black uppercase tracking-tighter">Surat Perjanjian</h3>
+                <p class="text-slate-500 text-sm mt-2 leading-relaxed">Kontrak kerjasama pemasangan unit IPAL (Dalam Pengembangan).</p>
+                <div class="mt-6 text-slate-400 font-bold text-[10px] uppercase tracking-widest italic">
+                    Coming Soon
+                </div>
+            </div>
+
+            <!-- Menu 4: Surat Lainnya (Placeholder) -->
+            <div class="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-blue-900/5 group opacity-60 cursor-not-allowed">
+                <div class="w-14 h-14 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-black uppercase tracking-tighter">Arsip Surat</h3>
+                <p class="text-slate-500 text-sm mt-2 leading-relaxed">Penyimpanan dokumen internal dan log pengiriman barang.</p>
+                <div class="mt-6 text-slate-400 font-bold text-[10px] uppercase tracking-widest italic">
+                    Coming Soon
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="text-center pb-12">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">© 2026 Yudi Filter Official System</p>
+        <p class="text-[10px] text-slate-300 mt-1 uppercase tracking-tighter">Designed for High-Performance Administration</p>
+    </footer>
+
+</body>
+</html>
