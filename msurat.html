@@ -3,61 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master System Surat - Yudi Filter</title>
+    <title>Master System Surat YF - Mobile Optimized</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .font-heading { font-family: 'Playfair Display', serif; }
         .step-content { display: none; }
         .step-content.active { display: block; }
-        .paper-container { width: 100%; overflow-x: auto; display: flex; justify-content: center; background: #cbd5e1; padding: 40px 0; }
+        
+        /* Container untuk mengakomodasi scaling di Mobile */
+        .paper-wrapper { 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            background: #cbd5e1; 
+            padding: 20px 0; 
+            overflow: hidden; 
+        }
+
         #print-area {
             width: 210mm;
             min-height: 297mm;
             background: white;
             box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             transform-origin: top center;
+            flex-shrink: 0;
         }
+
         .sig-canvas { touch-action: none; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 1rem; cursor: crosshair; }
+        
         @media print {
             .no-print { display: none !important; }
             body { background: white; margin: 0; }
             #print-area { box-shadow: none !important; width: 100% !important; padding: 15mm !important; transform: scale(1) !important; margin: 0 !important; }
+            .paper-wrapper { padding: 0; background: white; overflow: visible; }
         }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen">
 
     <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50 no-print">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-700 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-200">YF</div>
-                <span class="font-bold tracking-tight">Master System Surat Yudi Filter</span>
+        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <img src="logo.png" class="w-8 h-8 object-contain" onerror="this.src='https://ui-avatars.com/api/?name=YF&background=1d4ed8&color=fff'">
+                <span class="font-bold text-sm tracking-tight hidden sm:inline">YF System Surat</span>
             </div>
-            <div id="step-indicator" class="text-[10px] font-black bg-blue-600 text-white px-4 py-2 rounded-full uppercase tracking-widest">Step 1: Kategori</div>
+            <div id="step-indicator" class="text-[9px] font-black bg-blue-700 text-white px-3 py-1.5 rounded-full uppercase tracking-widest">Step 1: Kategori</div>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-6 mt-4">
+    <main class="max-w-4xl mx-auto p-4 sm:p-6 mt-2">
         
         <section id="step-1" class="step-content active">
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-                <h2 class="text-2xl font-black text-blue-900 mb-6 uppercase tracking-tight">Klasifikasi & Template</h2>
-                <div class="grid grid-cols-1 gap-6">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Kategori Surat</h2>
+                <div class="space-y-4">
                     <div>
-                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Jenis Surat & Konteks Pekerjaan</label>
-                        <select id="in-category" onchange="applyTemplate()" class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl text-sm font-bold focus:border-blue-600 outline-none transition-all cursor-pointer">
-                            <option value="SPH_SUWAWAL">Surat Penawaran - Dapur Suwawal (MBG Edition)</option>
-                            <option value="SPH">Surat Penawaran Harga (Global)</option>
-                            <option value="SPN">Surat Pernyataan / Addendum (Kenaikan Harga)</option>
-                            <option value="SPJ">Surat Perjanjian Kerjasama (Kontrak)</option>
-                            <option value="SKT">Surat Keterangan Teknis (Uji Kelayakan)</option>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Template Dokumen</label>
+                        <select id="in-category" onchange="applyTemplate()" class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl text-sm font-bold focus:border-blue-600 outline-none transition-all">
+                            <option value="SPH_SUWAWAL">Penawaran Dapur Suwawal (MBG)</option>
+                            <option value="SPH">Penawaran Harga Global</option>
+                            <option value="SPN">Addendum / Penyesuaian Harga</option>
+                            <option value="SPJ">Kontrak Kerjasama (SPK)</option>
+                            <option value="SKT">Keterangan Teknis Kelayakan</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nomor Dokumen (Auto-Generated)</label>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nomor Surat</label>
                         <input type="text" id="in-doc-num" class="w-full bg-blue-50 border-2 border-blue-100 p-4 rounded-2xl font-mono text-blue-700 font-bold outline-none">
                     </div>
                 </div>
@@ -65,81 +79,65 @@
         </section>
 
         <section id="step-2" class="step-content">
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-                <h2 class="text-2xl font-black text-blue-900 mb-6 uppercase tracking-tight">Tujuan Pengiriman</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Yayasan / Instansi / Perusahaan</label>
-                        <input type="text" id="in-yayasan" placeholder="Contoh: Yayasan Chamim Abdul Rasyid" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm font-bold">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase">Nama Penerima (Up)</label>
-                        <input type="text" id="in-recipient" placeholder="Nama Lengkap" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm font-bold">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase">Jabatan / Keterangan Lokasi</label>
-                        <input type="text" id="in-location" placeholder="Contoh: Dapur Suwawal / Di Tempat" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm font-bold">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Lampiran</label>
-                        <input type="text" id="in-attachment" value="1 (Satu) Berkas Terlampir" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm font-bold">
-                    </div>
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Tujuan Surat</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <input type="text" id="in-yayasan" placeholder="Yayasan / Instansi" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm font-bold">
+                    <input type="text" id="in-recipient" placeholder="Nama Penerima (Up)" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm font-bold">
+                    <input type="text" id="in-location" placeholder="Lokasi (Contoh: Di Tempat)" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm font-bold">
+                    <input type="text" id="in-attachment" value="1 (Satu) Berkas Terlampir" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm font-bold">
                 </div>
             </div>
         </section>
 
         <section id="step-3" class="step-content">
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-                <h2 class="text-2xl font-black text-blue-900 mb-6 uppercase tracking-tight">Redaksi Konten</h2>
-                <div class="space-y-6">
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase">Paragraf Pembuka</label>
-                        <textarea id="in-body-1" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm h-32 leading-relaxed outline-none focus:border-blue-500"></textarea>
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase">Inti Dokumen (Spesifikasi/Harga/Pasal)</label>
-                        <textarea id="in-body-2" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm h-60 leading-relaxed outline-none focus:border-blue-500"></textarea>
-                    </div>
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Isi Surat</h2>
+                <div class="space-y-4">
+                    <textarea id="in-body-1" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm h-32 outline-none focus:border-blue-500" placeholder="Paragraf Pembuka"></textarea>
+                    <textarea id="in-body-2" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm h-60 outline-none focus:border-blue-500" placeholder="Inti Surat / Rincian"></textarea>
                 </div>
             </div>
         </section>
 
         <section id="step-4" class="step-content">
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 max-w-lg mx-auto text-center">
-                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Validasi & Tanda Tangan</h2>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 max-w-lg mx-auto text-center">
+                <h2 class="text-xl font-black text-blue-900 mb-4 uppercase tracking-tight">Tanda Tangan</h2>
                 <canvas id="canvas-sig" class="sig-canvas w-full"></canvas>
-                <button onclick="clearSig()" class="mt-4 text-[10px] font-bold text-red-500 uppercase border border-red-100 px-4 py-2 rounded-full hover:bg-red-50">Hapus Coretan</button>
-                
-                <div class="mt-8 space-y-4 text-left">
+                <div class="flex justify-between mt-3">
+                    <button onclick="clearSig()" class="text-[10px] font-bold text-red-500 uppercase">Hapus</button>
+                    <span class="text-[10px] text-slate-400 italic">Tanda tangan di atas</span>
+                </div>
+                <div class="mt-6 space-y-3">
                     <input type="text" id="in-signer-name" value="YUDI" class="w-full border-2 border-slate-100 p-4 rounded-xl font-bold text-center">
-                    <input type="text" id="in-signer-title" value="Owner Yudi Filter" class="w-full border-2 border-slate-100 p-4 rounded-xl text-sm text-center">
+                    <input type="text" id="in-signer-title" value="Owner Yudi Filter" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs text-center">
                 </div>
             </div>
         </section>
 
         <section id="step-5" class="step-content no-print">
-            <div class="paper-container">
-                <div id="print-area" class="p-20 text-slate-800 flex flex-col">
+            <div class="paper-wrapper">
+                <div id="print-area" class="p-12 sm:p-20 text-slate-800 flex flex-col">
                     <div class="flex items-center border-b-[5px] border-blue-800 pb-6 mb-10">
-                        <div class="w-24 h-24 bg-blue-800 rounded-full flex items-center justify-center text-white text-3xl font-black mr-8 shadow-inner">YF</div>
-                        <div class="flex-1 text-center pr-20">
+                        <img src="logo.png" class="w-24 h-24 object-contain mr-8" onerror="this.style.display='none'">
+                        <div class="flex-1 text-center pr-10">
                             <h1 class="text-3xl font-black font-heading text-blue-900 uppercase leading-none tracking-tighter">YUDI FILTER</h1>
-                            <p class="text-[11px] font-bold text-blue-600 mt-2 uppercase tracking-[0.2em] italic">Cekatan • Tepat • Mengalir Sempurna</p>
-                            <p class="text-[10px] mt-4 font-bold text-slate-400 uppercase tracking-widest">Ds. Sundoluhur, Pati | WA: +62 898-8147-186 | Ahli Air Domestik</p>
+                            <p class="text-[11px] font-bold text-blue-600 mt-2 uppercase tracking-widest italic">Cekatan • Tepat • Mengalir Sempurna</p>
+                            <p class="text-[9px] mt-4 font-bold text-slate-400 uppercase">Ds. Sundoluhur, Pati | WA: +62 898-8147-186</p>
                         </div>
                     </div>
 
                     <div class="flex justify-between text-[13px] mb-12">
-                        <div class="space-y-1.5">
-                            <p>Nomor <span class="inline-block w-20 ml-2 text-right mr-3">:</span> <span id="out-doc-num" class="font-bold"></span></p>
-                            <p>Lampiran <span class="inline-block w-20 ml-2 text-right mr-3">:</span> <span id="out-attachment"></span></p>
-                            <p>Perihal <span class="inline-block w-20 ml-2 text-right mr-3">:</span> <span id="out-subject" class="font-bold border-b-2 border-blue-900/20 pb-0.5"></span></p>
+                        <div class="space-y-1">
+                            <p>Nomor<span class="inline-block w-16 text-right mr-2">:</span><span id="out-doc-num" class="font-bold"></span></p>
+                            <p>Lampiran<span class="inline-block w-16 text-right mr-2">:</span><span id="out-attachment"></span></p>
+                            <p>Perihal<span class="inline-block w-16 text-right mr-2">:</span><span id="out-subject" class="font-bold border-b-2 border-blue-900/20"></span></p>
                         </div>
-                        <p id="out-date" class="font-black text-blue-900 uppercase text-[11px] tracking-widest"></p>
+                        <p id="out-date" class="font-black text-blue-900 uppercase text-[10px] tracking-widest"></p>
                     </div>
 
                     <div class="mb-10 text-[14px]">
-                        <p class="mb-1">Kepada Yth,</p>
+                        <p>Kepada Yth,</p>
                         <p id="out-yayasan" class="font-black text-blue-900 text-lg uppercase"></p>
                         <p id="out-recipient" class="font-bold"></p>
                         <p id="out-location" class="italic text-slate-500"></p>
@@ -148,17 +146,15 @@
                     <div class="text-[15px] space-y-6 text-justify leading-relaxed">
                         <p>Dengan hormat,</p>
                         <p id="out-body-1"></p>
-                        <div id="out-body-2" class="whitespace-pre-line bg-slate-50/50 p-6 border-l-[6px] border-blue-800 rounded-r-xl"></div>
+                        <div id="out-body-2" class="whitespace-pre-line bg-slate-50 p-6 border-l-4 border-blue-800 rounded-r-xl"></div>
                         <p>Demikian surat ini kami sampaikan agar dapat dipergunakan sebagaimana mestinya. Atas perhatian dan kerjasama Bapak/Ibu, kami ucapkan terima kasih.</p>
                     </div>
 
                     <div class="mt-auto ml-auto w-64 text-center">
-                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-6">Authorized By</p>
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4">Hormat kami,</p>
                         <div class="h-28 flex items-center justify-center relative">
                             <img id="out-sig-img" class="max-h-full max-w-full z-10 hidden mix-blend-multiply" src="" alt="TTD">
-                            <div class="absolute w-24 h-24 border-4 border-blue-600/10 rounded-full flex items-center justify-center text-[8px] text-blue-600/10 font-black rotate-[-15deg] uppercase text-center leading-tight">
-                                YUDI FILTER<br>CERTIFIED SYSTEM<br>EST. 2026
-                            </div>
+                            <div class="absolute w-20 h-20 border-2 border-blue-600/5 rounded-full flex items-center justify-center text-[6px] text-blue-600/5 font-black rotate-[-15deg] text-center">YUDI FILTER<br>OFFICIAL STAMP</div>
                         </div>
                         <p id="out-signer-name" class="font-black border-b-2 border-slate-900 text-lg text-blue-900 mt-4"></p>
                         <p id="out-signer-title" class="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-widest"></p>
@@ -166,17 +162,17 @@
                 </div>
             </div>
 
-            <div class="flex gap-4 mt-12 pb-32 max-w-md mx-auto">
-                <button onclick="window.print()" class="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black shadow-xl hover:scale-105 transition-all">🖨️ PDF</button>
-                <button onclick="downloadImage()" class="flex-1 bg-blue-700 text-white py-5 rounded-2xl font-black shadow-xl hover:scale-105 transition-all">🖼️ JPG</button>
+            <div class="flex flex-col sm:flex-row gap-4 mt-8 pb-32 max-w-md mx-auto">
+                <button onclick="window.print()" class="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black active:scale-95 transition-all">CETAK PDF</button>
+                <button onclick="downloadImage()" class="flex-1 bg-blue-700 text-white py-5 rounded-2xl font-black active:scale-95 transition-all">SIMPAN JPG</button>
             </div>
         </section>
     </main>
 
-    <div class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-2xl border-t p-5 no-print flex justify-center z-[100]">
-        <div class="max-w-4xl w-full flex gap-4">
-            <button id="prevBtn" onclick="changeStep(-1)" class="flex-1 bg-slate-200 text-slate-600 py-5 rounded-2xl font-black uppercase tracking-widest hidden active:scale-95 transition">Kembali</button>
-            <button id="nextBtn" onclick="changeStep(1)" class="flex-[2] bg-blue-700 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] shadow-blue-200 shadow-2xl active:scale-95 transition">Lanjutkan</button>
+    <div class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t p-4 no-print flex justify-center z-[100]">
+        <div class="max-w-4xl w-full flex gap-3">
+            <button id="prevBtn" onclick="changeStep(-1)" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-black uppercase hidden transition">Kembali</button>
+            <button id="nextBtn" onclick="changeStep(1)" class="flex-[2] bg-blue-700 text-white py-4 rounded-2xl font-black uppercase shadow-xl transition">Lanjutkan</button>
         </div>
     </div>
 
@@ -190,40 +186,32 @@
                 recipient: "Muhammad Iqbal Faish",
                 location: "Dapur Suwawal (MBG Jambu Timur)",
                 subject: "Penawaran Sistem IPAL Bio-Tank (Anaerob-Aerob)",
-                body1: "Sehubungan dengan upaya peningkatan fasilitas sanitasi di lingkungan Dapur Suwawal, kami mengajukan penawaran pengadaan sistem IPAL Bio-Tank 2000L (Merek: BIOGAR) dengan teknologi Anaerob-Aerob untuk hasil olahan maksimal.",
-                body2: "TOTAL INVESTASI (Paket B): Rp 28.500.000\n\nSKEMA PEMBAYARAN:\n• DP 60% (Pemesanan): Rp 17.100.000\n• Pelunasan 40% (Uji Fungsi): Rp 11.400.000\n\nGaransi unit mekanis dan kebocoran tanki selama 1 (satu) tahun."
+                body1: "Sehubungan dengan rencana peningkatan fasilitas sanitasi di lingkungan Dapur Suwawal, kami mengajukan penawaran pengadaan sistem IPAL Bio-Tank 2000L dengan teknologi Anaerob-Aerob.",
+                body2: "TOTAL INVESTASI: Rp 28.500.000\n\nSKEMA PEMBAYARAN:\n• DP 60% (Pemesanan): Rp 17.100.000\n• Pelunasan 40% (Uji Fungsi): Rp 11.400.000"
             },
             SPH: {
-                yayasan: "[Nama Perusahaan/Instansi]",
-                recipient: "[Nama Pimpinan]",
-                location: "Di Tempat",
-                subject: "Surat Penawaran Harga Sistem Pengolahan Air",
-                body1: "Melalui surat ini, kami bermaksud menawarkan solusi pengolahan air bersih/limbah sesuai dengan kebutuhan operasional di lokasi Bapak/Ibu.",
-                body2: "RINCIAN PENAWARAN:\n1. Unit Filter Utama: [Spesifikasi]\n2. Sistem Pompa: [Merk/Kapasitas]\n3. Jasa Instalasi & Setting.\n\nTotal Biaya: Rp [Angka]\nEstimasi Pengerjaan: [Jumlah] Hari Kerja."
+                yayasan: "[Nama Perusahaan]", recipient: "[Nama Penerima]", location: "Di Tempat",
+                subject: "Surat Penawaran Harga Sistem Filter Air",
+                body1: "Berikut kami sampaikan penawaran harga terbaik untuk sistem pengolahan air di lokasi Bapak/Ibu.",
+                body2: "RINCIAN:\n1. Unit Filter: [Spesifikasi]\n2. Jasa Instalasi.\n\nTotal: Rp [Angka]"
             },
             SPN: {
-                yayasan: "[Nama Klien]",
-                recipient: "[Nama Pimpinan]",
-                location: "Di Tempat",
-                subject: "Addendum Penyesuaian Harga Akibat Fluktuasi Pasar",
-                body1: "Terlebih dahulu kami berterima kasih atas kepercayaan Bapak/Ibu. Melalui surat ini, kami informasikan kondisi terkini terkait dinamika harga material di pasar global.",
-                body2: "Sehubungan dengan adanya kenaikan harga bahan baku dasar (kertas, material teknik, dsb) dan fluktuasi pasar yang signifikan, maka terjadi penyesuaian harga dari pihak produsen/supplier utama kami (PT Graha Pilar Sentosa - BIOGAR).\n\nPenyesuaian ini dilakukan untuk memastikan material yang terpasang tetap memenuhi standar kualitas Industry-Ready."
+                yayasan: "[Nama Klien]", recipient: "[Nama Pimpinan]", location: "Di Tempat",
+                subject: "Addendum Penyesuaian Harga Pasar",
+                body1: "Melalui surat ini kami sampaikan penyesuaian harga material akibat fluktuasi pasar global.",
+                body2: "Penyesuaian ini mengikuti harga bahan baku terbaru dari PT Graha Pilar Sentosa (BIOGAR)."
             },
             SPJ: {
-                yayasan: "[Nama Pihak Kedua]",
-                recipient: "[Nama Penanggung Jawab]",
-                location: "Di Tempat",
-                subject: "Surat Perjanjian Kerjasama (SPK) Instalasi",
-                body1: "Surat perjanjian ini dibuat sebagai bentuk kesepakatan kerjasama antara Yudi Filter (Pihak I) dengan [Nama Pihak Kedua] (Pihak II) terkait pengadaan unit IPAL.",
-                body2: "PASAL 1: RUANG LINGKUP\nPihak I berkewajiban menyediakan unit spesifikasi [X] dan Pihak II berkewajiban menyediakan area instalasi.\n\nPASAL 2: PEMBAYARAN\nTermin 1 (DP): [Angka]%\nTermin 2 (Pelunasan): [Angka]%"
+                yayasan: "[Pihak Kedua]", recipient: "[Nama]", location: "Di Tempat",
+                subject: "Surat Perjanjian Kerjasama (SPK)",
+                body1: "Surat kesepakatan kerjasama antara Yudi Filter dengan pihak kedua.",
+                body2: "PASAL 1: Lingkup Pekerjaan...\nPASAL 2: Pembayaran..."
             },
             SKT: {
-                yayasan: "[Nama Pemilik Lokasi]",
-                recipient: "[Nama Petugas]",
-                location: "Lokasi Terpasang",
-                subject: "Surat Keterangan Teknis Kelayakan Sistem",
-                body1: "Menyatakan bahwa unit yang telah terpasang di lokasi Bapak/Ibu telah melalui serangkaian uji kelayakan (Commissioning Test).",
-                body2: "HASIL PENGUJIAN:\n1. Kebocoran Tanki: NIHIL\n2. Tekanan Aerasi: STABIL\n3. Kualitas Air Hasil: JERNIH & TIDAK BAU\n\nUnit dinyatakan LAYAK BEROPERASI secara penuh."
+                yayasan: "[Nama Pemilik]", recipient: "[Nama]", location: "Lokasi",
+                subject: "Keterangan Teknis Kelayakan Unit",
+                body1: "Menyatakan unit telah melewati uji fungsi dan layak beroperasi.",
+                body2: "Hasil Uji: Jernih, Tidak Bau, Debit Stabil."
             }
         };
 
@@ -246,8 +234,7 @@
             sigCanvas.width = sigCanvas.parentElement.offsetWidth;
             sigCanvas.height = 200;
             sigCtx = sigCanvas.getContext('2d');
-            sigCtx.lineWidth = 3; sigCtx.lineCap = 'round'; sigCtx.strokeStyle = '#000';
-            
+            sigCtx.lineWidth = 3; sigCtx.lineCap = 'round';
             let draw = false;
             const pos = (e) => {
                 const r = sigCanvas.getBoundingClientRect();
@@ -256,10 +243,8 @@
             sigCanvas.onmousedown = (e) => { draw = true; sigCtx.beginPath(); const p = pos(e); sigCtx.moveTo(p.x, p.y); };
             sigCanvas.onmousemove = (e) => { if(!draw) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); };
             window.onmouseup = () => draw = false;
-
             sigCanvas.ontouchstart = (e) => { e.preventDefault(); const p = pos(e); draw = true; sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); };
             sigCanvas.ontouchmove = (e) => { e.preventDefault(); if(!draw) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); };
-            sigCanvas.ontouchend = () => draw = false;
         }
 
         function clearSig() { sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); }
@@ -270,13 +255,11 @@
             document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
             document.getElementById(`step-${next}`).classList.add('active');
             currentStep = next;
-            
             document.getElementById('step-indicator').innerText = `Step ${next}: ${['Kategori','Tujuan','Isi','TTD','Selesai'][next-1]}`;
             document.getElementById('prevBtn').classList.toggle('hidden', next === 1);
-            document.getElementById('nextBtn').innerText = next === 5 ? "BERES!" : (next === 4 ? "LIHAT PREVIEW" : "LANJUTKAN");
-
+            document.getElementById('nextBtn').innerText = next === 5 ? "SELESAI" : "LANJUTKAN";
             if(next === 4) setTimeout(initSignaturePad, 100);
-            if(next === 5) { sync(); document.getElementById('nextBtn').classList.add('hidden'); }
+            if(next === 5) { sync(); handleMobileScaling(); document.getElementById('nextBtn').classList.add('hidden'); }
             else { document.getElementById('nextBtn').classList.remove('hidden'); }
             window.scrollTo(0,0);
         }
@@ -285,7 +268,6 @@
             const now = new Date();
             const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
             document.getElementById('out-date').innerText = `Pati, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-            
             document.getElementById('out-doc-num').innerText = document.getElementById('in-doc-num').value;
             document.getElementById('out-attachment').innerText = document.getElementById('in-attachment').value;
             document.getElementById('out-yayasan').innerText = document.getElementById('in-yayasan').value;
@@ -296,21 +278,37 @@
             document.getElementById('out-signer-name').innerText = document.getElementById('in-signer-name').value;
             document.getElementById('out-signer-title').innerText = document.getElementById('in-signer-title').value;
             document.getElementById('out-subject').innerText = templates[document.getElementById('in-category').value].subject;
-            
             const img = document.getElementById('out-sig-img');
             img.src = sigCanvas.toDataURL();
             img.classList.remove('hidden');
         }
 
-        async function downloadImage() {
-            const el = document.getElementById('print-area');
-            const canvas = await html2canvas(el, { scale: 2 });
-            const link = document.createElement('a');
-            link.download = `Yudi-Filter-Dokumen-${Date.now()}.jpg`;
-            link.href = canvas.toDataURL('image/jpeg', 0.9);
-            link.click();
+        function handleMobileScaling() {
+            const paper = document.getElementById('print-area');
+            const wrapper = document.querySelector('.paper-wrapper');
+            if (window.innerWidth < 794) {
+                const scale = (window.innerWidth - 40) / 794;
+                paper.style.transform = `scale(${scale})`;
+                wrapper.style.height = (paper.offsetHeight * scale) + "px";
+            } else {
+                paper.style.transform = "scale(1)";
+                wrapper.style.height = "auto";
+            }
         }
 
+        async function downloadImage() {
+            const el = document.getElementById('print-area');
+            const originalTransform = el.style.transform;
+            el.style.transform = "scale(1)";
+            const canvas = await html2canvas(el, { scale: 2 });
+            const link = document.createElement('a');
+            link.download = `YF-Surat-${Date.now()}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg');
+            link.click();
+            el.style.transform = originalTransform;
+        }
+
+        window.onresize = () => { if(currentStep === 5) handleMobileScaling(); };
         applyTemplate();
     </script>
 </body>
