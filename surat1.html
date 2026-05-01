@@ -2,149 +2,140 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YF Smart System - A4 Precision Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YF Smart System - Universal Responsive A4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #f8fafc; }
         .font-heading { font-family: 'Playfair Display', serif; }
         .step-content { display: none; }
         .step-content.active { display: block; }
         
-        /* Container Pratinjau */
+        /* VIRTUAL A4 CANVAS LOGIC 
+           Mengunci lebar pada 794px untuk konsistensi layout 100% 
+        */
         .paper-wrapper { 
             width: 100%; 
             display: flex; 
             justify-content: center; 
             background: #cbd5e1; 
-            padding: 40px 0; 
+            padding: 20px 0; 
+            overflow: hidden; /* Mencegah scroll horizontal di HP */
         }
 
         #print-area {
-            width: 210mm;
-            min-height: 297mm; /* Menggunakan min-height agar konten tidak terpotong */
-            padding: 20mm;
+            width: 794px; /* Fix A4 Width */
+            min-height: 1123px; /* Fix A4 Height */
+            padding: 60px; 
             background: white;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
-            position: relative;
+            transform-origin: top center; /* Titik tumpu scaling */
+            transition: transform 0.2s ease-out;
         }
 
-        /* Grid 2 Kolom untuk Rincian */
-        #out-body-2 {
+        /* Grid 2 Kolom Komponen pada Surat */
+        .out-grid-comp {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px 30px;
         }
 
-        .sig-canvas { touch-action: none; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 1rem; cursor: crosshair; }
+        .sig-canvas { touch-action: none; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 1.5rem; cursor: crosshair; }
         
-        /* Pengaturan Cetak A4 */
-        @page {
-            size: A4;
-            margin: 0;
-        }
-
+        @page { size: A4; margin: 0; }
         @media print {
             .no-print { display: none !important; }
             body { background: white; margin: 0; }
-            .paper-wrapper { padding: 0; background: white; }
-            #print-area { 
-                box-shadow: none !important; 
-                width: 210mm !important; 
-                min-height: 297mm !important; 
-                padding: 20mm !important; 
-                margin: 0 !important; 
-            }
+            .paper-wrapper { padding: 0; background: white; overflow: visible; }
+            #print-area { box-shadow: none !important; transform: scale(1) !important; margin: 0 !important; width: 794px !important; }
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body>
 
     <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50 no-print shadow-sm">
         <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <img src="logo.png" class="w-8 h-8 object-contain" onerror="this.src='https://ui-avatars.com/api/?name=YF&background=1d4ed8&color=fff'">
-                <span class="font-bold text-sm text-blue-900 tracking-tight">YF System</span>
+                <span class="font-bold text-xs sm:text-sm text-blue-900 uppercase tracking-tighter">YF System</span>
             </div>
-            <div id="step-indicator" class="text-[9px] font-black bg-blue-700 text-white px-4 py-2 rounded-full uppercase tracking-widest">Langkah 1: Kategori</div>
+            <div id="step-indicator" class="text-[8px] sm:text-[10px] font-black bg-blue-700 text-white px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">Langkah 1</div>
         </div>
     </nav>
 
     <main class="max-w-4xl mx-auto p-4 sm:p-8 mt-2">
-        <!-- LANGKAH 1 -->
+        
         <section id="step-1" class="step-content active">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Pilih Template</h2>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Kategori Surat</h2>
                 <div class="space-y-4">
                     <select id="in-category" onchange="applyTemplate()" class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl text-sm font-bold outline-none focus:border-blue-600 transition-all">
-                        <option value="SPH_SUWAWAL">Dapur Suwawal (Yayasan Chamim)</option>
-                        <option value="SPH">Penawaran Umum IPAL</option>
+                        <option value="SPH_SUWAWAL">Penawaran Dapur Suwawal (MBG)</option>
+                        <option value="SPH">Penawaran Harga Global</option>
                     </select>
                     <input type="text" id="in-doc-num" class="w-full bg-blue-50 border-2 border-blue-100 p-4 rounded-2xl font-mono text-blue-700 font-bold outline-none" placeholder="Nomor Surat">
                 </div>
             </div>
         </section>
 
-        <!-- LANGKAH 2 -->
         <section id="step-2" class="step-content">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
                 <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Tujuan</h2>
                 <div class="grid grid-cols-1 gap-4">
-                    <input type="text" id="in-yayasan" placeholder="Yayasan / Instansi" class="w-full border-2 p-4 rounded-xl text-sm font-bold outline-none focus:border-blue-600">
-                    <input type="text" id="in-recipient" placeholder="Up: Nama Penerima" class="w-full border-2 p-4 rounded-xl text-sm font-bold outline-none focus:border-blue-600">
-                    <input type="text" id="in-location" placeholder="Lokasi Proyek" class="w-full border-2 p-4 rounded-xl text-sm font-bold outline-none focus:border-blue-600">
+                    <input type="text" id="in-yayasan" placeholder="Instansi / Yayasan" class="w-full border-2 p-4 rounded-xl font-bold outline-none focus:border-blue-600">
+                    <input type="text" id="in-recipient" placeholder="Nama Penerima (Up)" class="w-full border-2 p-4 rounded-xl font-bold outline-none focus:border-blue-600">
+                    <input type="text" id="in-location" placeholder="Lokasi" class="w-full border-2 p-4 rounded-xl font-bold outline-none focus:border-blue-600">
+                    <input type="text" id="in-attachment" value="1 (Satu) Berkas Terlampir" class="w-full border-2 p-4 rounded-xl font-bold outline-none focus:border-blue-600">
                 </div>
             </div>
         </section>
 
-        <!-- LANGKAH 3 -->
         <section id="step-3" class="step-content">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight text-center">Rincian Unit</h2>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight text-center">Spesifikasi Paket</h2>
+                
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                    <label class="cursor-pointer"><input type="radio" name="pkg-radio" value="A" class="sr-only" onchange="handlePackageChange('A')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all">Paket A</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="pkg-radio" value="B" class="sr-only" checked onchange="handlePackageChange('B')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all">Paket B</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="pkg-radio" value="C" class="sr-only" onchange="handlePackageChange('C')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all">Paket C</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="pkg-radio" value="CUSTOM" class="sr-only" onchange="handlePackageChange('CUSTOM')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all">Custom</div></label>
+                    <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="A" class="sr-only" onchange="handlePackageChange('A')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket A</div></label>
+                    <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="B" class="sr-only" checked onchange="handlePackageChange('B')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket B</div></label>
+                    <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="C" class="sr-only" onchange="handlePackageChange('C')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket C</div></label>
+                    <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="CUSTOM" class="sr-only" onchange="handlePackageChange('CUSTOM')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Custom</div></label>
                 </div>
+
                 <div class="mb-6">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Harga Penawaran</label>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Harga (Editable)</label>
                     <input type="text" id="in-price" class="w-full border-2 p-4 rounded-xl text-lg font-black text-blue-900 outline-none focus:border-blue-600">
                 </div>
-                <div id="checklist-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6 bg-slate-50 p-4 rounded-2xl border-2 border-dashed"></div>
-                <textarea id="in-body-1" class="w-full border-2 p-4 rounded-xl text-sm h-24 mb-4" placeholder="Pembuka">Sehubungan dengan rencana peningkatan standar sanitasi dan pengelolaan limbah cair di lingkungan operasional, kami mengajukan penawaran pengadaan sistem Instalasi Pengolahan Air Limbah (IPAL) dengan teknologi Anaerob-Aerob sebagai solusi yang efektif, efisien, dan ramah lingkungan.</textarea>
+
+                <div id="checklist-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6 bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-slate-200"></div>
+                <textarea id="in-body-1" class="w-full border-2 p-4 rounded-xl text-sm h-24 outline-none focus:border-blue-600" placeholder="Pembuka Surat"></textarea>
+                <textarea id="in-body-2" class="w-full border-2 p-4 rounded-xl text-sm h-32 mt-4 outline-none focus:border-blue-600" placeholder="Catatan Tambahan (Contoh: Skema Pembayaran)"></textarea>
             </div>
         </section>
 
-        <!-- LANGKAH 4 -->
         <section id="step-4" class="step-content">
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 max-w-lg mx-auto text-center shadow-sm">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 max-w-lg mx-auto text-center shadow-sm">
                 <h2 class="text-xl font-black text-blue-900 mb-4 uppercase tracking-tight">Tanda Tangan</h2>
                 <canvas id="canvas-sig" class="sig-canvas w-full h-48"></canvas>
-                <div class="flex justify-between mt-3 px-2">
-                    <button onclick="clearSig()" class="text-[10px] font-bold text-red-500 uppercase">Hapus</button>
-                    <span class="text-[10px] text-slate-400 italic">Tanda tangan di sini</span>
-                </div>
+                <button onclick="clearSig()" class="mt-4 text-[10px] font-bold text-red-500 uppercase">Hapus Coretan</button>
                 <div class="mt-8 space-y-4">
-                    <input type="text" id="in-signer-name" value="YUDI" class="w-full border-2 p-4 rounded-xl font-bold text-center uppercase tracking-widest">
-                    <input type="text" id="in-signer-title" value="Owner Yudi Filter" class="w-full border-2 p-4 rounded-xl text-xs text-center text-slate-400 uppercase">
+                    <input type="text" id="in-signer-name" value="YUDI" class="w-full border-2 p-4 rounded-xl font-bold text-center uppercase tracking-widest outline-none">
+                    <input type="text" id="in-signer-title" value="Owner Yudi Filter" class="w-full border-2 p-4 rounded-xl text-xs text-center text-slate-400 uppercase outline-none">
                 </div>
             </div>
         </section>
 
-        <!-- LANGKAH 5 -->
         <section id="step-5" class="step-content no-print">
             <div class="paper-wrapper">
                 <div id="print-area">
-                    <div class="flex items-center border-b-[5px] border-blue-800 pb-6 mb-8">
+                    <div class="flex items-center border-b-[5px] border-blue-800 pb-6 mb-10">
                         <img src="logo.png" class="w-20 h-20 object-contain mr-8" onerror="this.style.display='none'">
                         <div class="flex-1 text-center pr-12">
-                            <h1 class="text-3xl font-black font-heading text-blue-900 uppercase leading-none">YUDI FILTER</h1>
+                            <h1 class="text-3xl font-black font-heading text-blue-900 uppercase leading-none tracking-tighter">YUDI FILTER</h1>
                             <p class="text-[10px] font-bold text-blue-600 mt-2 uppercase tracking-[0.2em] italic">Cekatan • Tepat • Mengalir Sempurna</p>
                             <p class="text-[9px] mt-4 font-bold text-slate-400 uppercase tracking-widest">Ds Sundoluhur, Pati | WA: +62 898-8147-186</p>
                         </div>
@@ -152,13 +143,14 @@
 
                     <div class="flex justify-between text-[12px] mb-10">
                         <div class="space-y-1.5">
-                            <p>Nomor<span class="inline-block w-16 text-right mr-3">:</span><span id="out-doc-num" class="font-bold"></span></p>
-                            <p>Perihal<span class="inline-block w-16 text-right mr-3">:</span><span id="out-subject" class="font-bold border-b border-blue-900/10"></span></p>
+                            <p>Nomor<span class="inline-block w-14 text-right mr-3">:</span><span id="out-doc-num" class="font-bold"></span></p>
+                            <p>Lampiran<span class="inline-block w-14 text-right mr-3">:</span><span id="out-attachment"></span></p>
+                            <p>Perihal<span class="inline-block w-14 text-right mr-3">:</span><span id="out-subject" class="font-bold border-b border-blue-900/10"></span></p>
                         </div>
                         <p id="out-date" class="font-black text-blue-900 uppercase text-[10px] tracking-widest"></p>
                     </div>
 
-                    <div class="mb-8 text-[14px]">
+                    <div class="mb-10 text-[14px]">
                         <p class="mb-1">Kepada Yth,</p>
                         <p id="out-yayasan" class="font-black text-blue-900 text-lg uppercase leading-tight"></p>
                         <p id="out-recipient" class="font-bold"></p>
@@ -169,21 +161,19 @@
                         <p class="mb-4">Dengan hormat,</p>
                         <p id="out-body-1" class="mb-6 text-justify"></p>
                         
-                        <p class="font-bold text-blue-900 uppercase text-[10px] mb-3 tracking-widest border-b-2 border-blue-800 inline-block pb-1">Komponen Sistem IPAL:</p>
-                        <div id="out-body-2" class="mb-8 text-[11px] text-slate-700">
-                            <!-- 2 Kolom via JS -->
-                        </div>
+                        <p class="font-bold text-blue-900 uppercase text-[10px] mb-3 tracking-widest border-b-2 border-blue-800 inline-block pb-1">Spesifikasi Komponen Sistem:</p>
+                        <div id="out-body-comp" class="out-grid-comp text-[11px] text-slate-700"></div>
                         
-                        <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100 flex justify-between items-center mb-8">
+                        <div class="mt-8 bg-blue-50 p-5 rounded-2xl border border-blue-100 flex justify-between items-center mb-6">
                             <span class="text-xs font-bold text-blue-700 uppercase tracking-widest">Total Nilai Investasi:</span>
                             <span id="out-total-price" class="text-xl font-black text-blue-900"></span>
                         </div>
                         
-                        <p class="text-justify mb-8">Demikian surat penawaran ini kami sampaikan agar dapat dipergunakan sebagaimana mestinya. Atas perhatian Bapak/Ibu, kami ucapkan terima kasih.</p>
+                        <p id="out-body-2" class="text-justify text-[13px] whitespace-pre-line"></p>
+                        <p class="mt-6 text-justify">Demikian surat penawaran ini kami sampaikan agar dapat dipergunakan sebagaimana mestinya. Atas perhatian Bapak/Ibu, kami ucapkan terima kasih.</p>
                     </div>
 
-                    <!-- AREA TTD FIX -->
-                    <div class="mt-auto ml-auto w-64 text-center">
+                    <div class="mt-12 ml-auto w-64 text-center">
                         <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Hormat kami,</p>
                         <div class="h-32 flex items-center justify-center mb-4">
                             <img id="out-sig-img" class="max-h-full max-w-full mix-blend-multiply hidden" src="" alt="TTD">
@@ -191,22 +181,22 @@
                         <div class="inline-block border-b-2 border-slate-900 px-8 pb-1.5">
                             <p id="out-signer-name" class="font-black text-xl text-blue-900 uppercase tracking-tight leading-none"></p>
                         </div>
-                        <p id="out-signer-title" class="text-[10px] font-bold text-slate-400 uppercase mt-3 tracking-[0.2em]"></p>
+                        <p id="out-signer-title" class="text-[10px] font-bold text-slate-400 uppercase mt-3 tracking-widest"></p>
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-4 mt-8 pb-32 max-w-md mx-auto px-4">
-                <button onclick="window.print()" class="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black shadow-xl transition-all active:scale-95">CETAK PDF</button>
-                <button onclick="downloadImage()" class="flex-1 bg-blue-700 text-white py-5 rounded-2xl font-black shadow-xl transition-all active:scale-95">SIMPAN JPG</button>
+                <button onclick="window.print()" class="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black shadow-xl">CETAK PDF</button>
+                <button onclick="downloadImage()" class="flex-1 bg-blue-700 text-white py-5 rounded-2xl font-black shadow-xl">SIMPAN JPG</button>
             </div>
         </section>
     </main>
 
-    <div class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t p-5 no-print flex justify-center z-[100]">
+    <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-xl border-t p-5 no-print flex justify-center z-[100]">
         <div class="max-w-4xl w-full flex gap-4">
-            <button id="prevBtn" onclick="changeStep(-1)" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-black uppercase hidden">Kembali</button>
-            <button id="nextBtn" onclick="changeStep(1)" class="flex-[2] bg-blue-700 text-white py-4 rounded-2xl font-black uppercase shadow-xl">Lanjutkan</button>
+            <button id="prevBtn" onclick="changeStep(-1)" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-black uppercase hidden tracking-widest transition">Kembali</button>
+            <button id="nextBtn" onclick="changeStep(1)" class="flex-[2] bg-blue-700 text-white py-4 rounded-2xl font-black uppercase shadow-xl tracking-widest transition">Lanjutkan</button>
         </div>
     </div>
 
@@ -215,23 +205,16 @@
         let sigCanvas, sigCtx;
 
         const allComponents = [
-            "Biofilter Anaerob, Aerob & Grease Trap 3000L",
-            "Biofilter Anaerob & Aerob 2000L",
-            "Biofilter 1000L (Plus Grease Trap)",
-            "Grease Trap Ekstra 500L",
-            "Pompa Sentrifugal Semiportable",
-            "Pompa Submersible",
-            "Carbon Aktif & Pasir Silika",
-            "Tabung FRP 1054",
-            "Blower Aerator",
-            "Klorinator Manual & Desinfeksi",
-            "Bak Pengendapan Akhir 1100L",
-            "Kontrol Panel Automasi"
+            "Biofilter Anaerob, Aerob & Grease Trap 3000L", "Biofilter Anaerob & Aerob 2000L",
+            "Biofilter 1000L (Plus Grease Trap)", "Grease Trap Ekstra 500L",
+            "Pompa Sentrifugal Semiportable", "Pompa Submersible", "Carbon Aktif & Pasir Silika",
+            "Tabung FRP 1054", "Blower Aerator", "Klorinator Manual & Desinfeksi",
+            "Bak Pengendapan Akhir 1100L", "Kontrol Panel Automasi"
         ];
 
         const packagePresets = {
             A: { price: "39.000.000", checks: [0, 3, 4, 6, 7, 8, 9, 10, 11] },
-            B: { price: "30.000.000", checks: [1, 3, 4, 6, 7, 9, 10, 11] },
+            B: { price: "28.500.000", checks: [1, 3, 4, 6, 7, 9, 10, 11] },
             C: { price: "21.500.000", checks: [2, 5, 6, 7, 8, 9, 11] },
             CUSTOM: { price: "0", checks: [] }
         };
@@ -250,11 +233,8 @@
         function handlePackageChange(pkg) {
             const preset = packagePresets[pkg];
             document.getElementById('in-price').value = preset.price;
-            document.querySelectorAll('.comp-check').forEach(ch => {
-                const idx = parseInt(ch.dataset.index);
-                ch.checked = preset.checks.includes(idx);
-            });
-            updateActiveRadio(pkg);
+            document.querySelectorAll('.comp-check').forEach(ch => { ch.checked = preset.checks.includes(parseInt(ch.dataset.index)); });
+            updateRadioUI(pkg);
         }
 
         function onCheckChange() {
@@ -265,38 +245,35 @@
                 const preset = packagePresets[p].checks;
                 if (current.length === preset.length && preset.every(v => current.includes(v))) { matched = p; break; }
             }
-            updateActiveRadio(matched);
+            updateRadioUI(matched);
         }
 
-        function updateActiveRadio(val) {
-            document.querySelectorAll('input[name="pkg-radio"]').forEach(r => {
-                r.checked = r.value === val;
-                r.nextElementSibling.classList.toggle('border-blue-600', r.checked);
-                r.nextElementSibling.classList.toggle('bg-blue-50', r.checked);
-            });
-        }
+        function updateRadioUI(val) { document.querySelectorAll('input[name="pkg-radio"]').forEach(r => { r.checked = r.value === val; }); }
 
         function applyTemplate() {
             const cat = document.getElementById('in-category').value;
             const now = new Date();
             const roman = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"][now.getMonth()];
             document.getElementById('in-doc-num').value = `${Math.floor(Math.random()*900)+100}/YF-${cat}/${roman}/${now.getFullYear()}`;
+            document.getElementById('out-subject').innerText = cat === "SPH_SUWAWAL" ? "Penawaran Sistem IPAL Bio-Tank" : "Penawaran Harga Sistem IPAL";
+            document.getElementById('in-body-1').value = "Sehubungan dengan rencana peningkatan fasilitas sanitasi, berikut kami sampaikan penawaran pengadaan sistem IPAL dengan teknologi Anaerob-Aerob.";
             handlePackageChange('B');
         }
 
         function initSignaturePad() {
             sigCanvas = document.getElementById('canvas-sig');
-            sigCanvas.width = sigCanvas.parentElement.offsetWidth;
-            sigCanvas.height = 200;
+            sigCanvas.width = sigCanvas.parentElement.offsetWidth; sigCanvas.height = 200;
             sigCtx = sigCanvas.getContext('2d');
             sigCtx.lineWidth = 3; sigCtx.lineCap = 'round';
             let draw = false;
-            const pos = (e) => { const r = sigCanvas.getBoundingClientRect(); return { x: (e.clientX || e.touches[0].clientX) - r.left, y: (e.clientY || e.touches[0].clientY) - r.top }; };
-            sigCanvas.onmousedown = (e) => { draw = true; sigCtx.beginPath(); const p = pos(e); sigCtx.moveTo(p.x, p.y); };
-            sigCanvas.onmousemove = (e) => { if(!draw) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); };
-            window.onmouseup = () => draw = false;
-            sigCanvas.ontouchstart = (e) => { e.preventDefault(); const p = pos(e); draw = true; sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); };
-            sigCanvas.ontouchmove = (e) => { e.preventDefault(); if(!draw) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); };
+            const pos = (e) => { const r = sigCanvas.getBoundingClientRect(); return { x: (e.clientX || (e.touches && e.touches[0].clientX)) - r.left, y: (e.clientY || (e.touches && e.touches[0].clientY)) - r.top }; };
+            const start = (e) => { draw = true; sigCtx.beginPath(); const p = pos(e); sigCtx.moveTo(p.x, p.y); };
+            const move = (e) => { if(!draw) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); };
+            const stop = () => draw = false;
+            sigCanvas.onmousedown = start; sigCanvas.onmousemove = move; window.onmouseup = stop;
+            sigCanvas.ontouchstart = (e) => { e.preventDefault(); start(e); };
+            sigCanvas.ontouchmove = (e) => { e.preventDefault(); move(e); };
+            sigCanvas.ontouchend = stop;
         }
 
         function clearSig() { sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); }
@@ -307,7 +284,7 @@
             document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
             document.getElementById(`step-${next}`).classList.add('active');
             currentStep = next;
-            document.getElementById('step-indicator').innerText = `Langkah ${next}: ${['Kategori','Tujuan','Isi','TTD','Review'][next-1]}`;
+            document.getElementById('step-indicator').innerText = `Langkah ${next}`;
             document.getElementById('prevBtn').classList.toggle('hidden', next === 1);
             document.getElementById('nextBtn').innerText = next === 5 ? "SELESAI" : "LANJUTKAN";
             if(next === 4) setTimeout(initSignaturePad, 100);
@@ -317,59 +294,58 @@
         }
 
         function sync() {
-            const now = new Date();
-            const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+            const now = new Date(); const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
             document.getElementById('out-date').innerText = `Pati, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
             document.getElementById('out-doc-num').innerText = document.getElementById('in-doc-num').value;
+            document.getElementById('out-attachment').innerText = document.getElementById('in-attachment').value;
             document.getElementById('out-yayasan').innerText = document.getElementById('in-yayasan').value;
             document.getElementById('out-recipient').innerText = document.getElementById('in-recipient').value;
             document.getElementById('out-location').innerText = document.getElementById('in-location').value;
             document.getElementById('out-body-1').innerText = document.getElementById('in-body-1').value;
+            document.getElementById('out-body-2').innerText = document.getElementById('in-body-2').value;
+            document.getElementById('out-total-price').innerText = "Rp " + document.getElementById('in-price').value;
             document.getElementById('out-signer-name').innerText = document.getElementById('in-signer-name').value;
             document.getElementById('out-signer-title').innerText = document.getElementById('in-signer-title').value;
-            document.getElementById('out-subject').innerText = "Penawaran Sistem IPAL";
-            document.getElementById('out-total-price').innerText = "Rp " + document.getElementById('in-price').value;
 
-            const grid = document.getElementById('out-body-2');
-            grid.innerHTML = "";
+            const grid = document.getElementById('out-body-comp'); grid.innerHTML = "";
             const selected = Array.from(document.querySelectorAll('.comp-check:checked')).map(i => allComponents[i.dataset.index]);
-            selected.forEach(comp => {
-                const div = document.createElement('div');
-                div.className = "flex items-start gap-2";
-                div.innerHTML = `<span class="text-blue-800 font-bold">•</span><span>${comp}</span>`;
-                grid.appendChild(div);
-            });
+            selected.forEach(comp => { const div = document.createElement('div'); div.innerText = "• " + comp; grid.appendChild(div); });
 
-            const img = document.getElementById('out-sig-img');
-            img.src = sigCanvas.toDataURL();
-            img.classList.remove('hidden');
+            const img = document.getElementById('out-sig-img'); img.src = sigCanvas.toDataURL(); img.classList.remove('hidden');
         }
 
+        /* FUNGSI KUNCI: Membuat Tampilan HP Identik dengan Desktop */
         function handleMobileScaling() {
             const paper = document.getElementById('print-area');
             const wrapper = document.querySelector('.paper-wrapper');
-            if (window.innerWidth < 794) {
-                const scale = (window.innerWidth - 40) / 794;
+            const windowWidth = window.innerWidth;
+            
+            // Kita mengunci kanvas pada 794px. Jika layar lebih kecil, kita perkecil skalanya.
+            if (windowWidth < 850) { 
+                const scale = (windowWidth - 32) / 794; 
                 paper.style.transform = `scale(${scale})`;
-                wrapper.style.height = (paper.offsetHeight * scale) + "px";
-            } else { paper.style.transform = "scale(1)"; wrapper.style.height = "auto"; }
+                // Sesuaikan tinggi container agar tidak ada sisa area kosong
+                wrapper.style.height = (paper.offsetHeight * scale + 40) + "px";
+            } else {
+                paper.style.transform = "scale(1)";
+                wrapper.style.height = "auto";
+            }
         }
 
         async function downloadImage() {
             const el = document.getElementById('print-area');
             const originalTransform = el.style.transform;
-            el.style.transform = "scale(1)";
-            const canvas = await html2canvas(el, { scale: 2, useCORS: true });
+            el.style.transform = "scale(1)"; 
+            const canvas = await html2canvas(el, { scale: 2 });
             const link = document.createElement('a');
-            link.download = `YF-Official-Offer-${Date.now()}.jpg`;
-            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.download = `YF-Surat-${Date.now()}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg');
             link.click();
             el.style.transform = originalTransform;
         }
 
         window.onresize = () => { if(currentStep === 5) handleMobileScaling(); };
-        renderChecklist();
-        applyTemplate();
+        renderChecklist(); applyTemplate();
     </script>
 </body>
 </html>
