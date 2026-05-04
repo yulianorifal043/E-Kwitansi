@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YF Smart System - Absolute Fixed A4</title>
+    <title>YF Smart System - Dynamic Spec Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -13,53 +13,19 @@
         .step-content { display: none; }
         .step-content.active { display: block; }
         
-        /* 1. LOGIKA ADAPTIVE SCALING (INDUSTRY STANDARD)
-           Wrapper utama menyembunyikan elemen yang "meluber" saat proses scaling.
-        */
+        /* LOGIKA ADAPTIVE SCALING A4 */
         .paper-wrapper { 
-            width: 100%; 
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-start;
-            background: #cbd5e1; 
-            padding-top: 20px; 
-            overflow: hidden; 
+            width: 100%; display: flex; justify-content: center; align-items: flex-start;
+            background: #cbd5e1; padding-top: 20px; overflow: hidden; 
         }
-
-        /* 2. Scale Wrapper berfungsi sebagai engsel untuk mencubit/zoom kertas */
-        #scale-wrapper {
-            width: 794px;
-            height: 1123px;
-            transform-origin: top center;
-            flex-shrink: 0;
-        }
-
-        /* 3. Area Print Dikunci Mati (Absolute Fixed Dimensions) */
+        #scale-wrapper { width: 794px; height: 1123px; transform-origin: top center; flex-shrink: 0; }
         #print-area {
-            width: 794px !important; 
-            min-width: 794px !important; 
-            max-width: 794px !important; 
-            height: 1123px !important; 
-            min-height: 1123px !important; 
-            max-height: 1123px !important; 
-            padding: 60px; 
-            background: white;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            overflow: hidden;
-            /* Matikan pembesaran teks otomatis di HP */
-            -webkit-text-size-adjust: none; 
-            text-size-adjust: none;
+            width: 794px !important; height: 1123px !important; padding: 60px; 
+            background: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            display: flex; flex-direction: column; box-sizing: border-box; overflow: hidden;
+            -webkit-text-size-adjust: none; text-size-adjust: none;
         }
-
-        .out-grid-comp {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px 30px;
-        }
-
+        .out-grid-comp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 30px; }
         .sig-canvas { touch-action: none; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 1.5rem; cursor: crosshair; }
         
         @page { size: A4; margin: 0; }
@@ -90,25 +56,16 @@
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
                 <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Jenis Surat</h2>
                 <div class="space-y-4">
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Template Dokumen</label>
-                        <select id="in-category" onchange="toggleCustomCategory()" class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl text-sm font-bold focus:border-blue-600 outline-none transition-all">
-                            <option value="SPH_SUWAWAL">Penawaran Dapur Suwawal (MBG)</option>
-                            <option value="SPH">Penawaran Harga Global</option>
-                            <option value="STJ">Surat Tanda Jadi (Booking Fee)</option>
-                            <option value="CUSTOM">-- Nama Surat Custom (Ketik Manual) --</option>
-                        </select>
-                    </div>
-                    
+                    <select id="in-category" onchange="toggleCustomCategory()" class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl text-sm font-bold focus:border-blue-600 outline-none transition-all">
+                        <option value="SPH_SUWAWAL">Penawaran Dapur Suwawal (MBG)</option>
+                        <option value="SPH">Penawaran Harga Global</option>
+                        <option value="STJ">Surat Tanda Jadi (Booking Fee)</option>
+                        <option value="CUSTOM">-- Nama Surat Custom (Ketik Manual) --</option>
+                    </select>
                     <div id="custom-cat-wrapper" class="hidden">
-                        <label class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block mb-2 italic">Ketik Nama Surat Manual</label>
                         <input type="text" id="in-custom-cat" placeholder="Contoh: Surat Perjanjian Kerjasama" class="w-full border-2 border-blue-200 p-4 rounded-2xl font-bold outline-none bg-blue-50/30">
                     </div>
-
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nomor Surat</label>
-                        <input type="text" id="in-doc-num" class="w-full bg-blue-50 border-2 border-blue-100 p-4 rounded-2xl font-mono text-blue-700 font-bold outline-none" placeholder="Nomor Surat">
-                    </div>
+                    <input type="text" id="in-doc-num" class="w-full bg-blue-50 border-2 border-blue-100 p-4 rounded-2xl font-mono text-blue-700 font-bold outline-none" placeholder="Nomor Surat">
                 </div>
             </div>
         </section>
@@ -127,20 +84,30 @@
 
         <section id="step-3" class="step-content">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight text-center">Spesifikasi & Harga</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                    <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="A" class="sr-only" onchange="handlePackageChange('A')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket A</div></label>
-                    <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="B" class="sr-only" checked onchange="handlePackageChange('B')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket B</div></label>
-                    <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="C" class="sr-only" onchange="handlePackageChange('C')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket C</div></label>
-                    <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="CUSTOM" class="sr-only" onchange="handlePackageChange('CUSTOM')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Custom</div></label>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-black text-blue-900 uppercase tracking-tight">Spesifikasi</h2>
+                    <button onclick="saveCurrentAsPreset()" class="text-[9px] font-bold bg-blue-50 text-blue-700 px-4 py-2 rounded-full uppercase tracking-widest border border-blue-200">Simpan Paket</button>
                 </div>
+                
+                <div id="preset-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"></div>
+                
                 <div class="mb-6">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Nilai Investasi / Tanda Jadi</label>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Nilai Investasi</label>
                     <input type="text" id="in-price" class="w-full border-2 p-4 rounded-xl text-lg font-black text-blue-900 outline-none focus:border-blue-600">
                 </div>
-                <div id="checklist-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6 bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-slate-200"></div>
+
+                <div id="checklist-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4 bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-slate-200"></div>
+
+                <div class="mb-8 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                    <label class="text-[10px] font-black text-blue-700 uppercase tracking-widest block mb-2">Tambah Spesifikasi Khusus / Lainnya</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="in-custom-spec" placeholder="Contoh: Bio ANAEROB AEROB 2.500 Liter" class="flex-1 border-2 border-white p-3 rounded-xl text-sm outline-none focus:border-blue-400 shadow-sm">
+                        <button onclick="addCustomSpecification()" class="bg-blue-600 text-white px-6 rounded-xl font-bold text-lg active:scale-95 transition-all">+</button>
+                    </div>
+                </div>
+
                 <textarea id="in-body-1" class="w-full border-2 p-4 rounded-xl text-sm h-24 outline-none focus:border-blue-600" placeholder="Pembuka Surat"></textarea>
-                <textarea id="in-body-2" class="w-full border-2 p-4 rounded-xl text-sm h-32 mt-4 outline-none focus:border-blue-600" placeholder="Catatan Tambahan / Skema Pembayaran"></textarea>
+                <textarea id="in-body-2" class="w-full border-2 p-4 rounded-xl text-sm h-32 mt-4 outline-none focus:border-blue-600" placeholder="Catatan Tambahan"></textarea>
             </div>
         </section>
 
@@ -172,7 +139,6 @@
                         <div class="flex justify-between text-[12px] mb-10">
                             <div class="space-y-1.5">
                                 <p>Nomor<span class="inline-block w-14 text-right mr-3">:</span><span id="out-doc-num" class="font-bold"></span></p>
-                                <p>Lampiran<span class="inline-block w-14 text-right mr-3">:</span><span id="out-attachment"></span></p>
                                 <p>Perihal<span class="inline-block w-14 text-right mr-3">:</span><span id="out-subject" class="font-bold border-b border-blue-900/10 pb-1"></span></p>
                             </div>
                             <p id="out-date" class="font-black text-blue-900 uppercase text-[10px] tracking-widest mt-1"></p>
@@ -233,7 +199,8 @@
         let currentStep = 1;
         let sigCanvas, sigCtx;
 
-        const allComponents = [
+        // allComponents sekarang menjadi let agar bisa ditambah
+        let allComponents = [
             "Biofilter Anaerob, Aerob & Grease Trap 3000L", "Biofilter Anaerob & Aerob 2000L",
             "Biofilter 1000L (Plus Grease Trap)", "Grease Trap Ekstra 500L",
             "Pompa Sentrifugal Semiportable", "Pompa Submersible", "Carbon Aktif & Pasir Silika",
@@ -241,12 +208,13 @@
             "Bak Pengendapan Akhir 1100L", "Kontrol Panel Automasi"
         ];
 
-        const packagePresets = {
-            A: { price: "39.000.000", checks: [0, 3, 4, 6, 7, 8, 9, 10, 11] },
-            B: { price: "28.500.000", checks: [1, 3, 4, 6, 7, 9, 10, 11] },
-            C: { price: "21.500.000", checks: [2, 5, 6, 7, 8, 9, 11] },
-            CUSTOM: { price: "0", checks: [] }
+        let packagePresets = {
+            A: { label: "Paket A", price: "39.000.000", checks: [0, 3, 4, 6, 7, 8, 9, 10, 11] },
+            B: { label: "Paket B", price: "28.500.000", checks: [1, 3, 4, 6, 7, 9, 10, 11] },
+            C: { label: "Paket C", price: "21.500.000", checks: [2, 5, 6, 7, 8, 9, 11] },
+            CUSTOM: { label: "Custom", price: "0", checks: [] }
         };
+        let activePreset = "B";
 
         const templates = {
             SPH_SUWAWAL: { subject: "Penawaran Sistem IPAL Bio-Tank", body1: "Sehubungan dengan rencana peningkatan fasilitas sanitasi di lingkungan Dapur Suwawal, kami mengajukan penawaran pengadaan sistem IPAL dengan teknologi Anaerob-Aerob.", body2: "SKEMA PEMBAYARAN:\n• DP 60% (Pemesanan)\n• Pelunasan 40% (Setelah Uji Fungsi)" },
@@ -254,11 +222,55 @@
             STJ: { subject: "Surat Tanda Jadi Pemesanan Unit IPAL", body1: "Melalui surat ini kami menyatakan bahwa pihak pertama telah menerima sejumlah dana sebagai Tanda Jadi (Booking Fee) untuk pengadaan sistem IPAL.", body2: "STATUS TANDA JADI:\n• Berlaku sebagai pengikat harga penawaran.\n• Nilai akan dikurangkan dari total nilai invoice pemesanan." }
         };
 
-        function toggleCustomCategory() {
-            const cat = document.getElementById('in-category').value;
-            const customWrapper = document.getElementById('custom-cat-wrapper');
-            customWrapper.classList.toggle('hidden', cat !== 'CUSTOM');
-            applyTemplate();
+        // FUNGSI TAMBAH KOMPONEN BARU KE DAFTAR
+        function addCustomSpecification() {
+            const input = document.getElementById('in-custom-spec');
+            const val = input.value.trim();
+            if (!val) return;
+            
+            // Tambahkan ke array master
+            allComponents.push(val);
+            
+            // Render ulang checklist
+            renderChecklist();
+            
+            // Otomatis centang item yang baru dibuat
+            const checks = document.querySelectorAll('.comp-check');
+            checks[checks.length - 1].checked = true;
+            
+            // Update state ke CUSTOM karena ada perubahan daftar
+            onCheckChange();
+            
+            // Bersihkan input
+            input.value = "";
+        }
+
+        function renderPresets() {
+            const container = document.getElementById('preset-container');
+            container.innerHTML = ""; 
+            for (let key in packagePresets) {
+                const preset = packagePresets[key];
+                const isChecked = activePreset === key ? "checked" : "";
+                const labelEl = document.createElement('label');
+                labelEl.className = "group cursor-pointer relative";
+                labelEl.innerHTML = `
+                    <input type="radio" name="pkg-radio" value="${key}" class="sr-only" ${isChecked} onchange="handlePackageChange('${key}')">
+                    <div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50 flex justify-center items-center h-full break-words">
+                        ${preset.label}
+                    </div>
+                `;
+                container.appendChild(labelEl);
+            }
+        }
+
+        function saveCurrentAsPreset() {
+            const name = prompt("Nama paket:");
+            if (!name) return;
+            const price = document.getElementById('in-price').value;
+            const checks = Array.from(document.querySelectorAll('.comp-check:checked')).map(i => parseInt(i.dataset.index));
+            const key = "PKG_" + Date.now();
+            packagePresets[key] = { label: name, price: price, checks: checks };
+            activePreset = key; renderPresets(); handlePackageChange(key);
         }
 
         function renderChecklist() {
@@ -273,6 +285,7 @@
         }
 
         function handlePackageChange(pkg) {
+            activePreset = pkg;
             const preset = packagePresets[pkg];
             document.getElementById('in-price').value = preset.price;
             document.querySelectorAll('.comp-check').forEach(ch => { ch.checked = preset.checks.includes(parseInt(ch.dataset.index)); });
@@ -287,26 +300,25 @@
                 const preset = packagePresets[p].checks;
                 if (current.length === preset.length && preset.every(v => current.includes(v))) { matched = p; break; }
             }
-            updateRadioUI(matched);
+            activePreset = matched; updateRadioUI(matched);
         }
 
         function updateRadioUI(val) { document.querySelectorAll('input[name="pkg-radio"]').forEach(r => { r.checked = r.value === val; }); }
+
+        function toggleCustomCategory() {
+            const cat = document.getElementById('in-category').value;
+            document.getElementById('custom-cat-wrapper').classList.toggle('hidden', cat !== 'CUSTOM');
+            applyTemplate();
+        }
 
         function applyTemplate() {
             const cat = document.getElementById('in-category').value;
             const now = new Date();
             const roman = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"][now.getMonth()];
             document.getElementById('in-doc-num').value = `${Math.floor(Math.random()*900)+100}/YF-${cat}/${roman}/${now.getFullYear()}`;
-            
             const t = templates[cat] || { subject: "", body1: "", body2: "" };
             document.getElementById('in-body-1').value = t.body1;
             document.getElementById('in-body-2').value = t.body2;
-            
-            if (cat === 'STJ') {
-                document.getElementById('in-price').placeholder = "Nilai Tanda Jadi (Booking Fee)";
-            } else {
-                document.getElementById('in-price').placeholder = "Total Nilai Investasi";
-            }
             handlePackageChange('B');
         }
 
@@ -345,7 +357,6 @@
             const now = new Date(); const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
             document.getElementById('out-date').innerText = `Pati, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
             document.getElementById('out-doc-num').innerText = document.getElementById('in-doc-num').value;
-            document.getElementById('out-attachment').innerText = document.getElementById('in-attachment').value;
             document.getElementById('out-yayasan').innerText = document.getElementById('in-yayasan').value;
             document.getElementById('out-recipient').innerText = document.getElementById('in-recipient').value;
             document.getElementById('out-location').innerText = document.getElementById('in-location').value;
@@ -356,12 +367,7 @@
             document.getElementById('out-signer-title').innerText = document.getElementById('in-signer-title').value;
 
             const cat = document.getElementById('in-category').value;
-            if (cat === 'CUSTOM') {
-                document.getElementById('out-subject').innerText = document.getElementById('in-custom-cat').value || "Surat Resmi";
-            } else {
-                document.getElementById('out-subject').innerText = templates[cat]?.subject || "Perihal Surat";
-            }
-
+            document.getElementById('out-subject').innerText = cat === 'CUSTOM' ? document.getElementById('in-custom-cat').value : (templates[cat]?.subject || "Penawaran");
             document.getElementById('out-price-label').innerText = cat === 'STJ' ? "Nilai Tanda Jadi:" : "Total Nilai Investasi:";
 
             const grid = document.getElementById('out-body-comp'); grid.innerHTML = "";
@@ -371,49 +377,32 @@
             const img = document.getElementById('out-sig-img'); img.src = sigCanvas.toDataURL(); img.classList.remove('hidden');
         }
 
-        /* LOGIKA ABSOLUTE SCALING (DIKUNCI MATI) */
         function handleMobileScaling() {
             const scaleWrapper = document.getElementById('scale-wrapper');
             const wrapper = document.getElementById('paper-wrapper');
             const windowWidth = window.innerWidth;
-            
-            // Lebar 794px, Tinggi 1123px (Rasio A4 Fiks)
-            const A4_WIDTH = 794;
-            const A4_HEIGHT = 1123; 
-            
+            const A4_WIDTH = 794; const A4_HEIGHT = 1123; 
             let scale = 1;
-            // Berikan margin 32px (16px kiri-kanan) di layar HP
-            if (windowWidth < (A4_WIDTH + 32)) { 
-                scale = (windowWidth - 32) / A4_WIDTH; 
-            }
-            
-            // Cubit (Scale) pembungkus luarnya
+            if (windowWidth < (A4_WIDTH + 32)) scale = (windowWidth - 32) / A4_WIDTH; 
             scaleWrapper.style.transform = `scale(${scale})`;
-            
-            // KUNCI: Hitung tinggi kontainer luar berdasarkan skala * tinggi fiks
             wrapper.style.height = `${(A4_HEIGHT * scale) + 40}px`;
         }
 
         async function downloadImage() {
             const el = document.getElementById('print-area');
             const wrapper = document.getElementById('scale-wrapper');
-            
-            // Reset Skala sesaat untuk mengambil tangkapan layar Resolusi Tinggi
             const originalTransform = wrapper.style.transform;
             wrapper.style.transform = "scale(1)"; 
-            
             const canvas = await html2canvas(el, { scale: 2 });
             const link = document.createElement('a');
             link.download = `YF-Document-${Date.now()}.jpg`;
             link.href = canvas.toDataURL('image/jpeg', 0.9);
             link.click();
-            
-            // Kembalikan Skala HP
             wrapper.style.transform = originalTransform;
         }
 
         window.onresize = () => { if(currentStep === 5) handleMobileScaling(); };
-        renderChecklist(); applyTemplate();
+        renderChecklist(); renderPresets(); applyTemplate();
     </script>
 </body>
 </html>
