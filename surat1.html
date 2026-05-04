@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YF Smart System - Universal Responsive A4</title>
+    <title>YF Smart System - Absolute Fixed A4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -13,32 +13,47 @@
         .step-content { display: none; }
         .step-content.active { display: block; }
         
-        /* VIRTUAL A4 CANVAS LOGIC 
-           Mengunci lebar pada 794px untuk konsistensi layout 100% 
+        /* 1. LOGIKA ADAPTIVE SCALING (INDUSTRY STANDARD)
+           Wrapper utama menyembunyikan elemen yang "meluber" saat proses scaling.
         */
         .paper-wrapper { 
             width: 100%; 
             display: flex; 
             justify-content: center; 
+            align-items: flex-start;
             background: #cbd5e1; 
-            padding: 20px 0; 
-            overflow: hidden; /* Mencegah scroll horizontal di HP */
+            padding-top: 20px; 
+            overflow: hidden; 
         }
 
+        /* 2. Scale Wrapper berfungsi sebagai engsel untuk mencubit/zoom kertas */
+        #scale-wrapper {
+            width: 794px;
+            height: 1123px;
+            transform-origin: top center;
+            flex-shrink: 0;
+        }
+
+        /* 3. Area Print Dikunci Mati (Absolute Fixed Dimensions) */
         #print-area {
-            width: 794px; /* Fix A4 Width */
-            min-height: 1123px; /* Fix A4 Height */
+            width: 794px !important; 
+            min-width: 794px !important; 
+            max-width: 794px !important; 
+            height: 1123px !important; 
+            min-height: 1123px !important; 
+            max-height: 1123px !important; 
             padding: 60px; 
             background: white;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
-            transform-origin: top center; /* Titik tumpu scaling */
-            transition: transform 0.2s ease-out;
+            overflow: hidden;
+            /* Matikan pembesaran teks otomatis di HP */
+            -webkit-text-size-adjust: none; 
+            text-size-adjust: none;
         }
 
-        /* Grid 2 Kolom Komponen pada Surat */
         .out-grid-comp {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -51,18 +66,19 @@
         @media print {
             .no-print { display: none !important; }
             body { background: white; margin: 0; }
-            .paper-wrapper { padding: 0; background: white; overflow: visible; }
-            #print-area { box-shadow: none !important; transform: scale(1) !important; margin: 0 !important; width: 794px !important; }
+            .paper-wrapper { padding: 0; background: white; overflow: visible; height: auto !important; }
+            #scale-wrapper { transform: scale(1) !important; width: 100% !important; height: auto !important; }
+            #print-area { box-shadow: none !important; margin: 0 !important; width: 794px !important; height: 1123px !important; padding: 15mm !important; }
         }
     </style>
 </head>
-<body>
+<body class="text-slate-900 min-h-screen">
 
     <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50 no-print shadow-sm">
         <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <img src="logo.png" class="w-8 h-8 object-contain" onerror="this.src='https://ui-avatars.com/api/?name=YF&background=1d4ed8&color=fff'">
-                <span class="font-bold text-xs sm:text-sm text-blue-900 uppercase tracking-tighter">YF System</span>
+                <span class="font-bold text-xs sm:text-sm text-blue-900 uppercase tracking-tighter">YF Smart System</span>
             </div>
             <div id="step-indicator" class="text-[8px] sm:text-[10px] font-black bg-blue-700 text-white px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">Langkah 1</div>
         </div>
@@ -72,13 +88,27 @@
         
         <section id="step-1" class="step-content active">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Kategori Surat</h2>
+                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight">Jenis Surat</h2>
                 <div class="space-y-4">
-                    <select id="in-category" onchange="applyTemplate()" class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl text-sm font-bold outline-none focus:border-blue-600 transition-all">
-                        <option value="SPH_SUWAWAL">Penawaran Dapur Suwawal (MBG)</option>
-                        <option value="SPH">Penawaran Harga Global</option>
-                    </select>
-                    <input type="text" id="in-doc-num" class="w-full bg-blue-50 border-2 border-blue-100 p-4 rounded-2xl font-mono text-blue-700 font-bold outline-none" placeholder="Nomor Surat">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Template Dokumen</label>
+                        <select id="in-category" onchange="toggleCustomCategory()" class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl text-sm font-bold focus:border-blue-600 outline-none transition-all">
+                            <option value="SPH_SUWAWAL">Penawaran Dapur Suwawal (MBG)</option>
+                            <option value="SPH">Penawaran Harga Global</option>
+                            <option value="STJ">Surat Tanda Jadi (Booking Fee)</option>
+                            <option value="CUSTOM">-- Nama Surat Custom (Ketik Manual) --</option>
+                        </select>
+                    </div>
+                    
+                    <div id="custom-cat-wrapper" class="hidden">
+                        <label class="text-[10px] font-bold text-blue-600 uppercase tracking-widest block mb-2 italic">Ketik Nama Surat Manual</label>
+                        <input type="text" id="in-custom-cat" placeholder="Contoh: Surat Perjanjian Kerjasama" class="w-full border-2 border-blue-200 p-4 rounded-2xl font-bold outline-none bg-blue-50/30">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nomor Surat</label>
+                        <input type="text" id="in-doc-num" class="w-full bg-blue-50 border-2 border-blue-100 p-4 rounded-2xl font-mono text-blue-700 font-bold outline-none" placeholder="Nomor Surat">
+                    </div>
                 </div>
             </div>
         </section>
@@ -97,31 +127,28 @@
 
         <section id="step-3" class="step-content">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight text-center">Spesifikasi Paket</h2>
-                
+                <h2 class="text-xl font-black text-blue-900 mb-6 uppercase tracking-tight text-center">Spesifikasi & Harga</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                     <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="A" class="sr-only" onchange="handlePackageChange('A')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket A</div></label>
                     <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="B" class="sr-only" checked onchange="handlePackageChange('B')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket B</div></label>
                     <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="C" class="sr-only" onchange="handlePackageChange('C')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Paket C</div></label>
                     <label class="group cursor-pointer"><input type="radio" name="pkg-radio" value="CUSTOM" class="sr-only" onchange="handlePackageChange('CUSTOM')"><div class="p-3 border-2 rounded-2xl text-center text-[10px] font-black uppercase transition-all group-has-[:checked]:border-blue-600 group-has-[:checked]:bg-blue-50">Custom</div></label>
                 </div>
-
                 <div class="mb-6">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Harga (Editable)</label>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Nilai Investasi / Tanda Jadi</label>
                     <input type="text" id="in-price" class="w-full border-2 p-4 rounded-xl text-lg font-black text-blue-900 outline-none focus:border-blue-600">
                 </div>
-
                 <div id="checklist-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6 bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-slate-200"></div>
                 <textarea id="in-body-1" class="w-full border-2 p-4 rounded-xl text-sm h-24 outline-none focus:border-blue-600" placeholder="Pembuka Surat"></textarea>
-                <textarea id="in-body-2" class="w-full border-2 p-4 rounded-xl text-sm h-32 mt-4 outline-none focus:border-blue-600" placeholder="Catatan Tambahan (Contoh: Skema Pembayaran)"></textarea>
+                <textarea id="in-body-2" class="w-full border-2 p-4 rounded-xl text-sm h-32 mt-4 outline-none focus:border-blue-600" placeholder="Catatan Tambahan / Skema Pembayaran"></textarea>
             </div>
         </section>
 
         <section id="step-4" class="step-content">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 max-w-lg mx-auto text-center shadow-sm">
-                <h2 class="text-xl font-black text-blue-900 mb-4 uppercase tracking-tight">Tanda Tangan</h2>
+                <h2 class="text-xl font-black text-blue-900 mb-4 uppercase tracking-tight">Otorisasi</h2>
                 <canvas id="canvas-sig" class="sig-canvas w-full h-48"></canvas>
-                <button onclick="clearSig()" class="mt-4 text-[10px] font-bold text-red-500 uppercase">Hapus Coretan</button>
+                <button onclick="clearSig()" class="mt-4 text-[10px] font-bold text-red-500 uppercase px-4 py-2 hover:bg-red-50 rounded-full transition-all">Hapus Coretan</button>
                 <div class="mt-8 space-y-4">
                     <input type="text" id="in-signer-name" value="YUDI" class="w-full border-2 p-4 rounded-xl font-bold text-center uppercase tracking-widest outline-none">
                     <input type="text" id="in-signer-title" value="Owner Yudi Filter" class="w-full border-2 p-4 rounded-xl text-xs text-center text-slate-400 uppercase outline-none">
@@ -130,73 +157,75 @@
         </section>
 
         <section id="step-5" class="step-content no-print">
-            <div class="paper-wrapper">
-                <div id="print-area">
-                    <div class="flex items-center border-b-[5px] border-blue-800 pb-6 mb-10">
-                        <img src="logo.png" class="w-20 h-20 object-contain mr-8" onerror="this.style.display='none'">
-                        <div class="flex-1 text-center pr-12">
-                            <h1 class="text-3xl font-black font-heading text-blue-900 uppercase leading-none tracking-tighter">YUDI FILTER</h1>
-                            <p class="text-[10px] font-bold text-blue-600 mt-2 uppercase tracking-[0.2em] italic">Cekatan • Tepat • Mengalir Sempurna</p>
-                            <p class="text-[9px] mt-4 font-bold text-slate-400 uppercase tracking-widest">Ds Sundoluhur, Pati | WA: +62 898-8147-186</p>
+            <div id="paper-wrapper" class="paper-wrapper">
+                <div id="scale-wrapper">
+                    <div id="print-area">
+                        <div class="flex items-center border-b-[5px] border-blue-800 pb-6 mb-10">
+                            <img src="logo.png" class="w-20 h-20 object-contain mr-8" onerror="this.style.display='none'">
+                            <div class="flex-1 text-center pr-12">
+                                <h1 class="text-3xl font-black font-heading text-blue-900 uppercase leading-none tracking-tighter">YUDI FILTER</h1>
+                                <p class="text-[10px] font-bold text-blue-600 mt-2 uppercase tracking-[0.2em] italic">Cekatan • Tepat • Mengalir Sempurna</p>
+                                <p class="text-[9px] mt-4 font-bold text-slate-400 uppercase tracking-widest">Ds Sundoluhur, Pati | WA: +62 898-8147-186</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="flex justify-between text-[12px] mb-10">
-                        <div class="space-y-1.5">
-                            <p>Nomor<span class="inline-block w-14 text-right mr-3">:</span><span id="out-doc-num" class="font-bold"></span></p>
-                            <p>Lampiran<span class="inline-block w-14 text-right mr-3">:</span><span id="out-attachment"></span></p>
-                            <p>Perihal<span class="inline-block w-14 text-right mr-3">:</span><span id="out-subject" class="font-bold border-b border-blue-900/10"></span></p>
+                        <div class="flex justify-between text-[12px] mb-10">
+                            <div class="space-y-1.5">
+                                <p>Nomor<span class="inline-block w-14 text-right mr-3">:</span><span id="out-doc-num" class="font-bold"></span></p>
+                                <p>Lampiran<span class="inline-block w-14 text-right mr-3">:</span><span id="out-attachment"></span></p>
+                                <p>Perihal<span class="inline-block w-14 text-right mr-3">:</span><span id="out-subject" class="font-bold border-b border-blue-900/10 pb-1"></span></p>
+                            </div>
+                            <p id="out-date" class="font-black text-blue-900 uppercase text-[10px] tracking-widest mt-1"></p>
                         </div>
-                        <p id="out-date" class="font-black text-blue-900 uppercase text-[10px] tracking-widest"></p>
-                    </div>
 
-                    <div class="mb-10 text-[14px]">
-                        <p class="mb-1">Kepada Yth,</p>
-                        <p id="out-yayasan" class="font-black text-blue-900 text-lg uppercase leading-tight"></p>
-                        <p id="out-recipient" class="font-bold"></p>
-                        <p id="out-location" class="italic text-slate-500"></p>
-                    </div>
+                        <div class="mb-8 text-[14px]">
+                            <p class="mb-1">Kepada Yth,</p>
+                            <p id="out-yayasan" class="font-black text-blue-900 text-lg uppercase leading-tight"></p>
+                            <p id="out-recipient" class="font-bold"></p>
+                            <p id="out-location" class="italic text-slate-500"></p>
+                        </div>
 
-                    <div class="text-[14px] leading-relaxed flex-grow">
-                        <p class="mb-4">Dengan hormat,</p>
-                        <p id="out-body-1" class="mb-6 text-justify"></p>
-                        
-                        <p class="font-bold text-blue-900 uppercase text-[10px] mb-3 tracking-widest border-b-2 border-blue-800 inline-block pb-1">Spesifikasi Komponen Sistem:</p>
-                        <div id="out-body-comp" class="out-grid-comp text-[11px] text-slate-700"></div>
-                        
-                        <div class="mt-8 bg-blue-50 p-5 rounded-2xl border border-blue-100 flex justify-between items-center mb-6">
-                            <span class="text-xs font-bold text-blue-700 uppercase tracking-widest">Total Nilai Investasi:</span>
-                            <span id="out-total-price" class="text-xl font-black text-blue-900"></span>
+                        <div class="text-[14px] leading-relaxed flex-grow flex flex-col">
+                            <p class="mb-4">Dengan hormat,</p>
+                            <p id="out-body-1" class="mb-6 text-justify"></p>
+                            
+                            <p class="font-bold text-blue-900 uppercase text-[10px] mb-3 tracking-widest border-b-2 border-blue-800 inline-block pb-1">Spesifikasi Komponen Sistem:</p>
+                            <div id="out-body-comp" class="out-grid-comp text-[11px] text-slate-700"></div>
+                            
+                            <div class="mt-8 bg-blue-50 p-5 rounded-2xl border border-blue-100 flex justify-between items-center mb-6">
+                                <span id="out-price-label" class="text-xs font-bold text-blue-700 uppercase tracking-widest">Total Nilai Investasi:</span>
+                                <span id="out-total-price" class="text-xl font-black text-blue-900"></span>
+                            </div>
+                            
+                            <p id="out-body-2" class="text-justify text-[13px] whitespace-pre-line flex-grow"></p>
+                            <p class="mt-4 text-justify">Demikian surat ini kami sampaikan agar dapat dipergunakan sebagaimana mestinya. Atas perhatian Bapak/Ibu, kami ucapkan terima kasih.</p>
                         </div>
-                        
-                        <p id="out-body-2" class="text-justify text-[13px] whitespace-pre-line"></p>
-                        <p class="mt-6 text-justify">Demikian surat penawaran ini kami sampaikan agar dapat dipergunakan sebagaimana mestinya. Atas perhatian Bapak/Ibu, kami ucapkan terima kasih.</p>
-                    </div>
 
-                    <div class="mt-12 ml-auto w-64 text-center">
-                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Hormat kami,</p>
-                        <div class="h-32 flex items-center justify-center mb-4">
-                            <img id="out-sig-img" class="max-h-full max-w-full mix-blend-multiply hidden" src="" alt="TTD">
+                        <div class="mt-8 ml-auto w-64 text-center">
+                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-2">Hormat kami,</p>
+                            <div class="h-28 flex items-center justify-center relative">
+                                <img id="out-sig-img" class="max-h-full max-w-full z-10 hidden mix-blend-multiply" src="" alt="TTD">
+                            </div>
+                            <div class="inline-block border-b-2 border-slate-900 px-8 pb-1.5">
+                                <p id="out-signer-name" class="font-black text-xl text-blue-900 uppercase tracking-tight leading-none"></p>
+                            </div>
+                            <p id="out-signer-title" class="text-[10px] font-bold text-slate-400 uppercase mt-3 tracking-widest"></p>
                         </div>
-                        <div class="inline-block border-b-2 border-slate-900 px-8 pb-1.5">
-                            <p id="out-signer-name" class="font-black text-xl text-blue-900 uppercase tracking-tight leading-none"></p>
-                        </div>
-                        <p id="out-signer-title" class="text-[10px] font-bold text-slate-400 uppercase mt-3 tracking-widest"></p>
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-4 mt-8 pb-32 max-w-md mx-auto px-4">
-                <button onclick="window.print()" class="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black shadow-xl">CETAK PDF</button>
-                <button onclick="downloadImage()" class="flex-1 bg-blue-700 text-white py-5 rounded-2xl font-black shadow-xl">SIMPAN JPG</button>
+                <button onclick="window.print()" class="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black shadow-xl transition-all active:scale-95">CETAK PDF</button>
+                <button onclick="downloadImage()" class="flex-1 bg-blue-700 text-white py-5 rounded-2xl font-black shadow-xl transition-all active:scale-95">SIMPAN JPG</button>
             </div>
         </section>
     </main>
 
-    <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-xl border-t p-5 no-print flex justify-center z-[100]">
+    <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-xl border-t p-5 no-print flex justify-center z-[100] shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
         <div class="max-w-4xl w-full flex gap-4">
-            <button id="prevBtn" onclick="changeStep(-1)" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-black uppercase hidden tracking-widest transition">Kembali</button>
-            <button id="nextBtn" onclick="changeStep(1)" class="flex-[2] bg-blue-700 text-white py-4 rounded-2xl font-black uppercase shadow-xl tracking-widest transition">Lanjutkan</button>
+            <button id="prevBtn" onclick="changeStep(-1)" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-black uppercase tracking-widest hidden transition">Kembali</button>
+            <button id="nextBtn" onclick="changeStep(1)" class="flex-[2] bg-blue-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl transition">Lanjutkan</button>
         </div>
     </div>
 
@@ -219,12 +248,25 @@
             CUSTOM: { price: "0", checks: [] }
         };
 
+        const templates = {
+            SPH_SUWAWAL: { subject: "Penawaran Sistem IPAL Bio-Tank", body1: "Sehubungan dengan rencana peningkatan fasilitas sanitasi di lingkungan Dapur Suwawal, kami mengajukan penawaran pengadaan sistem IPAL dengan teknologi Anaerob-Aerob.", body2: "SKEMA PEMBAYARAN:\n• DP 60% (Pemesanan)\n• Pelunasan 40% (Setelah Uji Fungsi)" },
+            SPH: { subject: "Penawaran Harga Sistem IPAL", body1: "Berikut kami sampaikan penawaran teknis dan harga terbaik untuk pengadaan unit IPAL di lokasi Bapak/Ibu.", body2: "" },
+            STJ: { subject: "Surat Tanda Jadi Pemesanan Unit IPAL", body1: "Melalui surat ini kami menyatakan bahwa pihak pertama telah menerima sejumlah dana sebagai Tanda Jadi (Booking Fee) untuk pengadaan sistem IPAL.", body2: "STATUS TANDA JADI:\n• Berlaku sebagai pengikat harga penawaran.\n• Nilai akan dikurangkan dari total nilai invoice pemesanan." }
+        };
+
+        function toggleCustomCategory() {
+            const cat = document.getElementById('in-category').value;
+            const customWrapper = document.getElementById('custom-cat-wrapper');
+            customWrapper.classList.toggle('hidden', cat !== 'CUSTOM');
+            applyTemplate();
+        }
+
         function renderChecklist() {
             const container = document.getElementById('checklist-container');
             container.innerHTML = "";
             allComponents.forEach((comp, index) => {
                 const label = document.createElement('label');
-                label.className = "flex items-center gap-3 p-3 bg-white rounded-xl border cursor-pointer hover:bg-blue-50 transition-all";
+                label.className = "flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-blue-50 transition-all";
                 label.innerHTML = `<input type="checkbox" data-index="${index}" class="comp-check w-5 h-5 accent-blue-600" onchange="onCheckChange()"><span class="text-[10px] font-bold text-slate-700">${comp}</span>`;
                 container.appendChild(label);
             });
@@ -255,8 +297,16 @@
             const now = new Date();
             const roman = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"][now.getMonth()];
             document.getElementById('in-doc-num').value = `${Math.floor(Math.random()*900)+100}/YF-${cat}/${roman}/${now.getFullYear()}`;
-            document.getElementById('out-subject').innerText = cat === "SPH_SUWAWAL" ? "Penawaran Sistem IPAL Bio-Tank" : "Penawaran Harga Sistem IPAL";
-            document.getElementById('in-body-1').value = "Sehubungan dengan rencana peningkatan fasilitas sanitasi, berikut kami sampaikan penawaran pengadaan sistem IPAL dengan teknologi Anaerob-Aerob.";
+            
+            const t = templates[cat] || { subject: "", body1: "", body2: "" };
+            document.getElementById('in-body-1').value = t.body1;
+            document.getElementById('in-body-2').value = t.body2;
+            
+            if (cat === 'STJ') {
+                document.getElementById('in-price').placeholder = "Nilai Tanda Jadi (Booking Fee)";
+            } else {
+                document.getElementById('in-price').placeholder = "Total Nilai Investasi";
+            }
             handlePackageChange('B');
         }
 
@@ -264,16 +314,14 @@
             sigCanvas = document.getElementById('canvas-sig');
             sigCanvas.width = sigCanvas.parentElement.offsetWidth; sigCanvas.height = 200;
             sigCtx = sigCanvas.getContext('2d');
-            sigCtx.lineWidth = 3; sigCtx.lineCap = 'round';
+            sigCtx.lineWidth = 3; sigCtx.lineCap = 'round'; sigCtx.strokeStyle = '#0f172a';
             let draw = false;
             const pos = (e) => { const r = sigCanvas.getBoundingClientRect(); return { x: (e.clientX || (e.touches && e.touches[0].clientX)) - r.left, y: (e.clientY || (e.touches && e.touches[0].clientY)) - r.top }; };
-            const start = (e) => { draw = true; sigCtx.beginPath(); const p = pos(e); sigCtx.moveTo(p.x, p.y); };
-            const move = (e) => { if(!draw) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); };
-            const stop = () => draw = false;
-            sigCanvas.onmousedown = start; sigCanvas.onmousemove = move; window.onmouseup = stop;
-            sigCanvas.ontouchstart = (e) => { e.preventDefault(); start(e); };
-            sigCanvas.ontouchmove = (e) => { e.preventDefault(); move(e); };
-            sigCanvas.ontouchend = stop;
+            sigCanvas.onmousedown = (e) => { draw = true; sigCtx.beginPath(); const p = pos(e); sigCtx.moveTo(p.x, p.y); };
+            sigCanvas.onmousemove = (e) => { if(!draw) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); };
+            window.onmouseup = () => draw = false;
+            sigCanvas.ontouchstart = (e) => { e.preventDefault(); draw = true; sigCtx.beginPath(); const p = pos(e); sigCtx.moveTo(p.x, p.y); };
+            sigCanvas.ontouchmove = (e) => { e.preventDefault(); if(!draw) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); };
         }
 
         function clearSig() { sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); }
@@ -307,6 +355,15 @@
             document.getElementById('out-signer-name').innerText = document.getElementById('in-signer-name').value;
             document.getElementById('out-signer-title').innerText = document.getElementById('in-signer-title').value;
 
+            const cat = document.getElementById('in-category').value;
+            if (cat === 'CUSTOM') {
+                document.getElementById('out-subject').innerText = document.getElementById('in-custom-cat').value || "Surat Resmi";
+            } else {
+                document.getElementById('out-subject').innerText = templates[cat]?.subject || "Perihal Surat";
+            }
+
+            document.getElementById('out-price-label').innerText = cat === 'STJ' ? "Nilai Tanda Jadi:" : "Total Nilai Investasi:";
+
             const grid = document.getElementById('out-body-comp'); grid.innerHTML = "";
             const selected = Array.from(document.querySelectorAll('.comp-check:checked')).map(i => allComponents[i.dataset.index]);
             selected.forEach(comp => { const div = document.createElement('div'); div.innerText = "• " + comp; grid.appendChild(div); });
@@ -314,34 +371,45 @@
             const img = document.getElementById('out-sig-img'); img.src = sigCanvas.toDataURL(); img.classList.remove('hidden');
         }
 
-        /* FUNGSI KUNCI: Membuat Tampilan HP Identik dengan Desktop */
+        /* LOGIKA ABSOLUTE SCALING (DIKUNCI MATI) */
         function handleMobileScaling() {
-            const paper = document.getElementById('print-area');
-            const wrapper = document.querySelector('.paper-wrapper');
+            const scaleWrapper = document.getElementById('scale-wrapper');
+            const wrapper = document.getElementById('paper-wrapper');
             const windowWidth = window.innerWidth;
             
-            // Kita mengunci kanvas pada 794px. Jika layar lebih kecil, kita perkecil skalanya.
-            if (windowWidth < 850) { 
-                const scale = (windowWidth - 32) / 794; 
-                paper.style.transform = `scale(${scale})`;
-                // Sesuaikan tinggi container agar tidak ada sisa area kosong
-                wrapper.style.height = (paper.offsetHeight * scale + 40) + "px";
-            } else {
-                paper.style.transform = "scale(1)";
-                wrapper.style.height = "auto";
+            // Lebar 794px, Tinggi 1123px (Rasio A4 Fiks)
+            const A4_WIDTH = 794;
+            const A4_HEIGHT = 1123; 
+            
+            let scale = 1;
+            // Berikan margin 32px (16px kiri-kanan) di layar HP
+            if (windowWidth < (A4_WIDTH + 32)) { 
+                scale = (windowWidth - 32) / A4_WIDTH; 
             }
+            
+            // Cubit (Scale) pembungkus luarnya
+            scaleWrapper.style.transform = `scale(${scale})`;
+            
+            // KUNCI: Hitung tinggi kontainer luar berdasarkan skala * tinggi fiks
+            wrapper.style.height = `${(A4_HEIGHT * scale) + 40}px`;
         }
 
         async function downloadImage() {
             const el = document.getElementById('print-area');
-            const originalTransform = el.style.transform;
-            el.style.transform = "scale(1)"; 
+            const wrapper = document.getElementById('scale-wrapper');
+            
+            // Reset Skala sesaat untuk mengambil tangkapan layar Resolusi Tinggi
+            const originalTransform = wrapper.style.transform;
+            wrapper.style.transform = "scale(1)"; 
+            
             const canvas = await html2canvas(el, { scale: 2 });
             const link = document.createElement('a');
-            link.download = `YF-Surat-${Date.now()}.jpg`;
-            link.href = canvas.toDataURL('image/jpeg');
+            link.download = `YF-Document-${Date.now()}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
             link.click();
-            el.style.transform = originalTransform;
+            
+            // Kembalikan Skala HP
+            wrapper.style.transform = originalTransform;
         }
 
         window.onresize = () => { if(currentStep === 5) handleMobileScaling(); };
