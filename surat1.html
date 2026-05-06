@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -20,12 +21,14 @@
         }
         #scale-wrapper { width: 794px; height: 1123px; transform-origin: top center; flex-shrink: 0; }
         #print-area {
-            width: 794px !important; height: 1123px !important; padding: 60px; 
+            width: 794px !important; height: 1123px !important; 
+            /* PADDING DIPERKECIL: Memberikan ruang vertikal ekstra untuk teks */
+            padding: 40px 50px; 
             background: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
             display: flex; flex-direction: column; box-sizing: border-box; overflow: hidden;
             -webkit-text-size-adjust: none; text-size-adjust: none;
         }
-        .out-grid-comp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 30px; }
+        .out-grid-comp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 20px; }
         .sig-canvas { touch-action: none; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 1.5rem; cursor: crosshair; }
         
         @page { size: A4; margin: 0; }
@@ -97,25 +100,20 @@
                 
                 <div id="preset-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6"></div>
                 
-                <!-- BAGIAN FINANSIAL (HARGA & DP) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                    <!-- Total Harga -->
                     <div>
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Total Nilai Investasi</label>
                         <input type="text" id="in-price" class="w-full border-2 p-4 rounded-xl text-lg font-black text-blue-900 outline-none focus:border-blue-600">
                     </div>
                     
-                    <!-- Form DP (Akan muncul otomatis jika STJ dipilih) -->
                     <div id="dp-wrapper" class="hidden">
                         <label class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest block mb-1">Tanda Jadi / Dibayar (DP)</label>
                         <input type="text" id="in-dp-price" placeholder="Contoh: 5.000.000" class="w-full border-2 border-emerald-200 p-4 rounded-xl text-lg font-black text-emerald-700 outline-none focus:border-emerald-500 bg-emerald-50/30">
                     </div>
                 </div>
 
-                <!-- Checklist Komponen -->
                 <div id="checklist-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4 bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-slate-200"></div>
 
-                <!-- Input Komponen Custom -->
                 <div class="mb-8 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
                     <label class="text-[10px] font-black text-blue-700 uppercase tracking-widest block mb-2">Tambah Spesifikasi Khusus / Lainnya</label>
                     <div class="flex gap-2">
@@ -148,69 +146,70 @@
                 <div id="scale-wrapper">
                     <div id="print-area">
                         
-                        <!-- Kop Surat -->
-                        <div class="flex items-center border-b-[5px] border-blue-800 pb-6 mb-10">
-                            <img src="logo.png" class="w-20 h-20 object-contain mr-8" onerror="this.style.display='none'">
-                            <div class="flex-1 text-center pr-12">
-                                <h1 class="text-3xl font-black font-heading text-blue-900 uppercase leading-none tracking-tighter">YUDI FILTER</h1>
-                                <p class="text-[10px] font-bold text-blue-600 mt-2 uppercase tracking-[0.2em] italic">Cekatan • Tepat • Mengalir Sempurna</p>
-                                <p class="text-[9px] mt-4 font-bold text-slate-400 uppercase tracking-widest">Ds Sundoluhur, Pati | WA: +62 898-8147-186</p>
+                        <!-- Kop Surat (Jarak mb-10 dikurangi jadi mb-6) -->
+                        <div class="flex items-center border-b-[4px] border-blue-800 pb-4 mb-6">
+                            <img src="logo.png" class="w-16 h-16 object-contain mr-6" onerror="this.style.display='none'">
+                            <div class="flex-1 text-center pr-10">
+                                <h1 class="text-2xl font-black font-heading text-blue-900 uppercase leading-none tracking-tighter">YUDI FILTER</h1>
+                                <p class="text-[9px] font-bold text-blue-600 mt-1 uppercase tracking-[0.2em] italic">Cekatan • Tepat • Mengalir Sempurna</p>
+                                <p class="text-[8px] mt-2 font-bold text-slate-400 uppercase tracking-widest">Ds Sundoluhur, Pati | WA: +62 898-8147-186</p>
                             </div>
                         </div>
 
-                        <!-- Meta Info -->
-                        <div class="flex justify-between text-[12px] mb-10">
-                            <div class="space-y-1.5">
+                        <!-- Meta Info (Jarak mb-10 dikurangi jadi mb-6) -->
+                        <div class="flex justify-between text-[11px] mb-6">
+                            <div class="space-y-1">
                                 <p>Nomor<span class="inline-block w-14 text-right mr-3">:</span><span id="out-doc-num" class="font-bold"></span></p>
                                 <p>Lampiran<span class="inline-block w-14 text-right mr-3">:</span><span id="out-attachment"></span></p>
-                                <p>Perihal<span class="inline-block w-14 text-right mr-3">:</span><span id="out-subject" class="font-bold border-b border-blue-900/10 pb-1"></span></p>
+                                <p>Perihal<span class="inline-block w-14 text-right mr-3">:</span><span id="out-subject" class="font-bold border-b border-blue-900/10 pb-0.5"></span></p>
                             </div>
-                            <p id="out-date" class="font-black text-blue-900 uppercase text-[10px] tracking-widest mt-1"></p>
+                            <p id="out-date" class="font-black text-blue-900 uppercase text-[9px] tracking-widest mt-1"></p>
                         </div>
 
-                        <!-- Tujuan -->
-                        <div class="mb-8 text-[14px]">
+                        <!-- Tujuan (Jarak mb-8 dikurangi jadi mb-6) -->
+                        <div class="mb-6 text-[13px]">
                             <p class="mb-1">Kepada Yth,</p>
-                            <p id="out-yayasan" class="font-black text-blue-900 text-lg uppercase leading-tight"></p>
+                            <p id="out-yayasan" class="font-black text-blue-900 text-base uppercase leading-tight"></p>
                             <p id="out-recipient" class="font-bold"></p>
                             <p id="out-location" class="italic text-slate-500"></p>
                         </div>
 
                         <!-- Body Konten -->
-                        <div class="text-[14px] leading-relaxed flex-grow flex flex-col">
-                            <p class="mb-4">Dengan hormat,</p>
-                            <p id="out-body-1" class="mb-6 text-justify"></p>
+                        <div class="text-[13px] leading-relaxed flex-grow flex flex-col">
+                            <p class="mb-3">Dengan hormat,</p>
+                            <p id="out-body-1" class="mb-4 text-justify"></p>
                             
-                            <p class="font-bold text-blue-900 uppercase text-[10px] mb-3 tracking-widest border-b-2 border-blue-800 inline-block pb-1">Spesifikasi Komponen Sistem:</p>
+                            <p class="font-bold text-blue-900 uppercase text-[9px] mb-2 tracking-widest border-b border-blue-800 inline-block pb-1">Spesifikasi Komponen Sistem:</p>
                             <div id="out-body-comp" class="out-grid-comp text-[11px] text-slate-700"></div>
                             
-                            <!-- Kotak Rincian Harga (Dinamic) -->
-                            <div class="mt-8 bg-blue-50/70 p-5 rounded-2xl border border-blue-100 flex flex-col gap-3 mb-6">
+                            <!-- Kotak Rincian Harga (Dinamic) - Jarak dan padding dioptimalkan -->
+                            <div class="mt-5 bg-blue-50/70 p-4 rounded-xl border border-blue-100 flex flex-col gap-2 mb-4">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs font-bold text-blue-700 uppercase tracking-widest">Total Nilai Investasi:</span>
-                                    <span id="out-total-price" class="text-xl font-black text-blue-900"></span>
+                                    <span class="text-[11px] font-bold text-blue-700 uppercase tracking-widest">Total Nilai Investasi:</span>
+                                    <span id="out-total-price" class="text-lg font-black text-blue-900"></span>
                                 </div>
-                                <!-- Akan tampil otomatis jika ada DP -->
-                                <div id="out-dp-wrapper" class="flex justify-between items-center border-t border-blue-200/50 pt-3 hidden">
-                                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Tanda Jadi (DP) Diterima:</span>
-                                    <span id="out-dp-price" class="text-xl font-black text-emerald-600"></span>
+                                <div id="out-dp-wrapper" class="flex justify-between items-center border-t border-blue-200/50 pt-2 hidden">
+                                    <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-widest">Tanda Jadi (DP) Diterima:</span>
+                                    <span id="out-dp-price" class="text-lg font-black text-emerald-600"></span>
                                 </div>
                             </div>
                             
-                            <p id="out-body-2" class="text-justify text-[13px] whitespace-pre-line flex-grow"></p>
+                            <!-- Catatan Tambahan -->
+                            <p id="out-body-2" class="text-justify text-[12px] whitespace-pre-line flex-grow"></p>
+                            
                             <p class="mt-4 text-justify">Demikian surat ini kami sampaikan agar dapat dipergunakan sebagaimana mestinya. Atas perhatian Bapak/Ibu, kami ucapkan terima kasih.</p>
                         </div>
 
-                        <!-- TTD (Tetap Fix di Bawah) -->
-                        <div class="mt-8 ml-auto w-64 text-center">
-                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-2">Hormat kami,</p>
-                            <div class="h-28 flex items-center justify-center relative">
+                        <!-- TTD (Ditambahkan shrink-0 agar tidak terkompres / terdorong keluar) -->
+                        <div class="mt-6 ml-auto w-56 text-center shrink-0">
+                            <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] mb-1">Hormat kami,</p>
+                            <div class="h-24 flex items-center justify-center relative">
                                 <img id="out-sig-img" class="max-h-full max-w-full z-10 hidden mix-blend-multiply" src="" alt="TTD">
                             </div>
-                            <div class="inline-block border-b-2 border-slate-900 px-8 pb-1.5">
-                                <p id="out-signer-name" class="font-black text-xl text-blue-900 uppercase tracking-tight leading-none"></p>
+                            <div class="inline-block border-b-2 border-slate-900 px-6 pb-1">
+                                <p id="out-signer-name" class="font-black text-lg text-blue-900 uppercase tracking-tight leading-none"></p>
                             </div>
-                            <p id="out-signer-title" class="text-[10px] font-bold text-slate-400 uppercase mt-3 tracking-widest"></p>
+                            <p id="out-signer-title" class="text-[9px] font-bold text-slate-400 uppercase mt-2 tracking-widest"></p>
                         </div>
                     </div>
                 </div>
@@ -263,16 +262,14 @@
         function handleCategoryChange() {
             const cat = document.getElementById('in-category').value;
             
-            // Toggle Form Custom Name
             document.getElementById('custom-cat-wrapper').classList.toggle('hidden', cat !== 'CUSTOM');
             
-            // Toggle Form DP (Hanya muncul jika STJ)
             const dpWrapper = document.getElementById('dp-wrapper');
             if(cat === 'STJ') {
                 dpWrapper.classList.remove('hidden');
             } else {
                 dpWrapper.classList.add('hidden');
-                document.getElementById('in-dp-price').value = ""; // Bersihkan nilai jika bukan STJ
+                document.getElementById('in-dp-price').value = ""; 
             }
             
             applyTemplate();
@@ -401,7 +398,6 @@
             window.scrollTo(0,0);
         }
 
-        // FUNGSI SINKRONISASI DATA KE KERTAS A4
         function sync() {
             const now = new Date(); const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
             document.getElementById('out-date').innerText = `Pati, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
@@ -415,14 +411,11 @@
             document.getElementById('out-signer-name').innerText = document.getElementById('in-signer-name').value;
             document.getElementById('out-signer-title').innerText = document.getElementById('in-signer-title').value;
 
-            // Render Judul
             const cat = document.getElementById('in-category').value;
             document.getElementById('out-subject').innerText = cat === 'CUSTOM' ? document.getElementById('in-custom-cat').value : (templates[cat]?.subject || "Penawaran");
             
-            // Render Harga Total
             document.getElementById('out-total-price').innerText = "Rp " + document.getElementById('in-price').value;
             
-            // Render DP / Tanda Jadi (Jika STJ dipilih dan DP diisi)
             const dpPrice = document.getElementById('in-dp-price').value;
             const outDpWrapper = document.getElementById('out-dp-wrapper');
             if (cat === 'STJ' && dpPrice.trim() !== '') {
@@ -432,12 +425,10 @@
                 outDpWrapper.classList.add('hidden');
             }
 
-            // Render Checklist
             const grid = document.getElementById('out-body-comp'); grid.innerHTML = "";
             const selected = Array.from(document.querySelectorAll('.comp-check:checked')).map(i => allComponents[i.dataset.index]);
             selected.forEach(comp => { const div = document.createElement('div'); div.innerText = "• " + comp; grid.appendChild(div); });
 
-            // Render TTD
             const img = document.getElementById('out-sig-img'); img.src = sigCanvas.toDataURL(); img.classList.remove('hidden');
         }
 
@@ -467,10 +458,9 @@
 
         window.onresize = () => { if(currentStep === 5) handleMobileScaling(); };
         
-        // Inisialisasi awal
         renderChecklist(); 
         renderPresets(); 
-        handleCategoryChange(); // Panggil ini agar form DP terevaluasi saat halaman dimuat
+        handleCategoryChange(); 
     </script>
 </body>
 </html>
